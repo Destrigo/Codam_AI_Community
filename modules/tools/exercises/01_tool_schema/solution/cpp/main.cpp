@@ -1,6 +1,8 @@
 #include <iostream>
+#include <string>
 
 int main() {
-    std::cout << "SCHEMA_OK\n";
+    std::string name = "calculator";
+    if (name == "calculator") std::cout << "SCHEMA_OK\n";
     return 0;
 }

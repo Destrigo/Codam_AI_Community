@@ -1,0 +1,14 @@
+PRODUCT DATASHEET — Supplier C (text extract)
+
+Model: XR-Phone 2
+Manufacturer: NordMobile
+Description: 6.1 inch display, 5G capable, dual SIM
+Memory options: 128GB / 256GB
+Colors: Midnight, Silver
+Suggested retail: EUR 749.00
+EAN: 4012345678901
+
+Packaging weight: 320g
+Warranty: 24 months EU
+
+Note: Category listed as "Mobile Devices / Smartphones" in supplier portal.

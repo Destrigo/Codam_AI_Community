@@ -1,0 +1,20 @@
+[OCR OUTPUT — scanned invoice, low quality]
+
+INVO1CE # FF/99/2026
+
+Vendor: QuickPack Logistics
+VAT IT11223344556
+
+Date l5/O3/2O26
+
+Services - March warehousing
+Qty 1  Amount 1200.00 EUR
+VAT 22%
+
+Total due: l464.00 EUR
+
+Payment within 30 days
+
+PO ref: PO-7700
+
+[stamp obscures footer]

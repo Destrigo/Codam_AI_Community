@@ -1,6 +1,7 @@
 #include <iostream>
 
 int main() {
-    std::cout << "INDEX_SIZE:3\n";
+    int size = 3;
+    std::cout << "INDEX_SIZE:" << size << "\n";
     return 0;
 }

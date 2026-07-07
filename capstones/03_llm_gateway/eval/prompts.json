@@ -1,0 +1,53 @@
+[
+  {
+    "id": "p01",
+    "prompt": "Reply with exactly: OK",
+    "must_contain": ["OK"]
+  },
+  {
+    "id": "p02",
+    "prompt": "What is 2+2? Reply with the number only.",
+    "must_contain": ["4"]
+  },
+  {
+    "id": "p03",
+    "prompt": "Name one EU country. One word only.",
+    "must_contain": []
+  },
+  {
+    "id": "p04",
+    "system": "You are a terse assistant. Max 5 words.",
+    "prompt": "Describe the weather.",
+    "must_contain": []
+  },
+  {
+    "id": "p05",
+    "prompt": "Translate hello to French. One word.",
+    "must_contain": ["Bonjour"]
+  },
+  {
+    "id": "p06",
+    "prompt": "List three colors as comma-separated words.",
+    "must_contain": [","]
+  },
+  {
+    "id": "p07",
+    "prompt": "Is water wet? Answer yes or no only.",
+    "must_contain": ["yes"]
+  },
+  {
+    "id": "p08",
+    "prompt": "Capital of Italy?",
+    "must_contain": ["Rome"]
+  },
+  {
+    "id": "p09",
+    "prompt": "Write the word GATEWAY_TEST in uppercase.",
+    "must_contain": ["GATEWAY_TEST"]
+  },
+  {
+    "id": "p10",
+    "prompt": "Return JSON only: {\"status\":\"ok\"}",
+    "must_contain": ["status", "ok"]
+  }
+]

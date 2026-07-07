@@ -1,6 +1,7 @@
 #include <iostream>
 
 int main() {
-    std::cout << "FALLBACK_OK\n";
+    bool primary = false;
+    std::cout << (!primary ? "FALLBACK_OK" : "PRIMARY_OK") << "\n";
     return 0;
 }

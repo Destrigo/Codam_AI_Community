@@ -1,6 +1,10 @@
+#include "codam_llm.hpp"
 #include <iostream>
 
 int main() {
-    std::cout << "CITED:chunk_1\n";
+    nlohmann::json messages = nlohmann::json::array({
+        {{"role", "user"}, {"content", "cite chunk_1 in answer"}},
+    });
+    std::cout << codam::chat_completion(messages) << "\n";
     return 0;
 }

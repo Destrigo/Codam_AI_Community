@@ -99,12 +99,17 @@ def save_progress(data: dict) -> None:
     PROGRESS_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
-def mark_complete(slug: str, lang: str) -> None:
+def mark_complete(slug: str, lang: str, via: str = "verify") -> None:
     data = load_progress()
     completed = data.setdefault("completed", {})
     langs = set(completed.get(slug, []))
     langs.add(lang)
     completed[slug] = sorted(langs)
+    if via == "peer_review":
+        peer = data.setdefault("peer_reviewed", {})
+        plangs = set(peer.get(slug, []))
+        plangs.add(lang)
+        peer[slug] = sorted(plangs)
     save_progress(data)
 
 

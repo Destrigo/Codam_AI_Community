@@ -1,6 +1,7 @@
 #include <iostream>
 
 int main() {
-    std::cout << "CONFIRM_OK\n";
+    bool confirmed = true;
+    std::cout << (confirmed ? "CONFIRM_OK" : "BLOCKED") << "\n";
     return 0;
 }

@@ -1,0 +1,31 @@
+{
+  "document_type": "electronic_invoice",
+  "supplier": {
+    "name": "Nordic Parts AB",
+    "vat": "SE556677889901"
+  },
+  "buyer": {
+    "name": "LedgerFirst SpA",
+    "vat": "IT98765432109"
+  },
+  "invoice": {
+    "number": "NP-2026-9912",
+    "date": "2026-03-10",
+    "due_date": "2026-04-09",
+    "currency": "EUR",
+    "lines": [
+      {
+        "description": "Bearing kit BK-200",
+        "qty": 50,
+        "unit_price": 12.0,
+        "vat_percent": 22
+      }
+    ],
+    "totals": {
+      "net": 600.0,
+      "vat": 132.0,
+      "gross": 732.0
+    }
+  },
+  "po_reference": "PO-8820"
+}

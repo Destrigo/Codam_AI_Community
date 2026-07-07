@@ -98,6 +98,15 @@ class _MockHandler(BaseHTTPRequestHandler):
             })
             return
 
+        if self.path.endswith("/fail_twice"):
+            self._handle_fail_twice()
+            return
+
+        if self.path.endswith("/echo"):
+            req = self._read_json()
+            self._send_json({"json": req})
+            return
+
         if not self.path.endswith("/chat/completions"):
             self._send_json({"error": "not found"}, status=404)
             return

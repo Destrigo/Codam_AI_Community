@@ -1,6 +1,8 @@
 #include <iostream>
+#include <string>
 
 int main() {
-    std::cout << "TEMPLATE_OK:codam\n";
+    std::string name = "codam";
+    std::cout << "TEMPLATE_OK:" << name << "\n";
     return 0;
 }

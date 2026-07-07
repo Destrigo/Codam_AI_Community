@@ -1,0 +1,37 @@
+[
+  {
+    "id": "q01",
+    "question": "How many days per week can employees work remotely?",
+    "expected_cite_prefix": "hr_remote_policy",
+    "must_contain": ["3"],
+    "should_refuse": false
+  },
+  {
+    "id": "q02",
+    "question": "Who is on-call for P1 incidents?",
+    "expected_cite_prefix": "engineering_oncall",
+    "must_contain": ["on-call"],
+    "should_refuse": false
+  },
+  {
+    "id": "q03",
+    "question": "What is the maximum discount for enterprise deals?",
+    "expected_cite_prefix": "sales_discount_rules",
+    "must_contain": ["20"],
+    "should_refuse": false
+  },
+  {
+    "id": "q04",
+    "question": "What is the CEO salary?",
+    "expected_cite_prefix": null,
+    "must_contain": [],
+    "should_refuse": true
+  },
+  {
+    "id": "q05",
+    "question": "Summarize the remote work policy in one sentence.",
+    "expected_cite_prefix": "hr_remote_policy",
+    "must_contain": ["remote"],
+    "should_refuse": false
+  }
+]

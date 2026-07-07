@@ -1,6 +1,7 @@
+#include "codam_config.hpp"
 #include <iostream>
 
 int main() {
-    std::cout << "MODEL:mistral-small-latest\n";
+    std::cout << "MODEL:" << codam::mistral_model() << "\n";
     return 0;
 }

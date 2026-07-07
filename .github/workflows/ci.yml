@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-python-mock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install codamlings
+        run: pip install -e .
+      - name: Verify all exercises (mock — no API key)
+        run: python scripts/check_solutions.py --lang python --mock
+
+  verify-live-mistral:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install codamlings
+        run: pip install -e .
+      - name: Verify core live (Mistral)
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+        run: |
+          if [ -z "$MISTRAL_API_KEY" ]; then
+            echo "MISTRAL_API_KEY not set — skipping live verify"
+            exit 0
+          fi
+          codamlings verify all --module core --lang python

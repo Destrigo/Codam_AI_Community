@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DocAssistantAnswer",
+  "type": "object",
+  "required": ["answer", "cited", "confidence"],
+  "properties": {
+    "answer": { "type": "string" },
+    "cited": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "confidence": { "enum": ["high", "low"] }
+  }
+}

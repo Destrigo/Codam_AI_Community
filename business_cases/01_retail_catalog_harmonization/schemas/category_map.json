@@ -1,0 +1,9 @@
+{
+  "cell phone": ["electronics", "mobile", "phones"],
+  "smartphone": ["electronics", "mobile", "phones"],
+  "handy": ["electronics", "mobile", "phones"],
+  "laptop": ["electronics", "computers", "laptops"],
+  "notebook": ["electronics", "computers", "laptops"],
+  "cuffie": ["electronics", "audio", "headphones"],
+  "headphones": ["electronics", "audio", "headphones"]
+}

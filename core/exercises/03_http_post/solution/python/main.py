@@ -1,11 +1,12 @@
 """Exercise 03 — HTTP POST."""
 
 import json
+import os
 import urllib.request
 
 
 def main() -> None:
-    url = "https://httpbin.org/post"
+    url = os.environ.get("CODAMLINGS_ECHO_URL", "https://httpbin.org/post")
     payload = {"name": "codam"}
     body = json.dumps(payload).encode("utf-8")
     request = urllib.request.Request(url, data=body, method="POST")

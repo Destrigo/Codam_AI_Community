@@ -7,6 +7,7 @@ import sys
 import time
 from pathlib import Path
 
+from codamlings.config import load_dotenv_if_present
 from codamlings.exercises import (
     CORE_EXERCISES,
     MODULE_NAMES,
@@ -15,7 +16,10 @@ from codamlings.exercises import (
     next_incomplete,
     exercises_for,
 )
+from codamlings.review import approve_review, list_pending, show_rubric, submit_for_review
 from codamlings.verify import run_exercise, verify_all, verify_exercise
+
+load_dotenv_if_present()
 
 
 def _print_list(lang: str, module: str | None) -> None:
@@ -39,19 +43,27 @@ def _print_list(lang: str, module: str | None) -> None:
             print(f"  [{status}] {ex.id} {ex.slug} — {ex.title}")
 
 
-def _show_hint(exercise_path: Path) -> None:
+def _show_hint(exercise_path: Path, show_solution: bool = False) -> None:
+    if show_solution:
+        sol_py = exercise_path / "solution" / "python" / "main.py"
+        if sol_py.exists():
+            print("=== Instructor solution (do not share) ===\n")
+            print(sol_py.read_text(encoding="utf-8"))
+            return
+    peer = exercise_path / "peer_review.md"
+    if peer.exists():
+        print(peer.read_text(encoding="utf-8"))
+        print("\n---\n")
     hint = exercise_path / "hint.md"
-    readme = exercise_path / "README.md"
     if hint.exists():
         print(hint.read_text(encoding="utf-8"))
-    elif readme.exists():
-        print("(hint.md missing — read the Assignment section in README.md)\n")
-        print(readme.read_text(encoding="utf-8"))
-    else:
-        print("No hint found.")
+    elif not peer.exists():
+        readme = exercise_path / "README.md"
+        if readme.exists():
+            print(readme.read_text(encoding="utf-8"))
 
 
-def _watch(lang: str, module: str | None) -> int:
+def _watch(lang: str, module: str | None, use_mock: bool) -> int:
     exercise = next_incomplete(lang, module=module)
     if not exercise:
         print("All exercises complete for this track!")
@@ -66,7 +78,7 @@ def _watch(lang: str, module: str | None) -> int:
             if mtime != last_mtime:
                 last_mtime = mtime
                 print(f"\n--- verify {exercise.slug} [{lang}] ---")
-                if verify_exercise(exercise, lang):
+                if verify_exercise(exercise, lang, use_mock=use_mock):
                     nxt = next_incomplete(lang, module=module)
                     if nxt:
                         exercise = nxt
@@ -83,21 +95,39 @@ def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="codamlings", description="Interactive AI exercises")
     parser.add_argument("--lang", choices=["python", "cpp"], default="python")
     parser.add_argument("--module", choices=["core", *MODULE_NAMES, "all"], default=None)
+    parser.add_argument("--mock", action="store_true", help="Offline mock (CI only)")
 
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("list", help="List exercises and progress")
-    run_p = sub.add_parser("run", help="Run an exercise")
+
+    run_p = sub.add_parser("run", help="Run an exercise (live Mistral by default)")
     run_p.add_argument("exercise", nargs="?", help="Exercise slug or id")
-    run_p.add_argument("--mock", action="store_true", help="Use local mock")
-    hint_p = sub.add_parser("hint", help="Show hint")
+
+    hint_p = sub.add_parser("hint", help="Peer review rubric + hint (not solution)")
     hint_p.add_argument("exercise", nargs="?", help="Exercise slug or id")
-    verify_p = sub.add_parser("verify", help="Verify exercises")
+    hint_p.add_argument("--solution", action="store_true", help="Show instructor solution")
+
+    verify_p = sub.add_parser("verify", help="Verify exercises (live Mistral by default)")
     verify_p.add_argument("exercise", nargs="?", help="Slug, id, or 'all'")
+
     sub.add_parser("watch", help="Verify on save")
+
+    review_p = sub.add_parser("review", help="Peer review workflow")
+    review_sub = review_p.add_subparsers(dest="review_cmd")
+    rubric_p = review_sub.add_parser("rubric", help="Show peer review checklist")
+    rubric_p.add_argument("exercise", nargs="?", help="Exercise slug")
+    submit_p = review_sub.add_parser("submit", help="Submit code for peer review")
+    submit_p.add_argument("exercise", nargs="?", help="Exercise slug")
+    submit_p.add_argument("--author", default="student")
+    review_sub.add_parser("pending", help="List pending submissions")
+    approve_p = review_sub.add_parser("approve", help="Approve peer review (marks complete)")
+    approve_p.add_argument("exercise", help="Exercise slug")
+    approve_p.add_argument("--reviewer", default="peer")
 
     args = parser.parse_args(argv)
     lang: str = args.lang
     module: str | None = args.module
+    use_mock: bool = args.mock
 
     if args.command is None:
         exercise = next_incomplete(lang, module=module or "core")
@@ -109,6 +139,7 @@ def main(argv: list[str] | None = None) -> None:
             print("\nUseful commands:")
             print(f"  codamlings run {exercise.path.name} --lang {lang}")
             print(f"  codamlings verify {exercise.path.name} --lang {lang}")
+            print(f"  codamlings review rubric {exercise.path.name}")
         else:
             print("Core complete! Try: codamlings list --module rag")
         return
@@ -122,27 +153,58 @@ def main(argv: list[str] | None = None) -> None:
         if not exercise:
             print("No exercise found.")
             sys.exit(1)
-        sys.exit(run_exercise(exercise, lang, use_mock=args.mock))
+        sys.exit(run_exercise(exercise, lang, use_mock=use_mock))
 
     if args.command == "hint":
         exercise = find_exercise(args.exercise, module=module) or next_incomplete(lang, module)
         if not exercise:
             print("No exercise found.")
             sys.exit(1)
-        _show_hint(exercise.path)
+        _show_hint(exercise.path, show_solution=getattr(args, "solution", False))
         return
 
     if args.command == "verify":
         if args.exercise in (None, "all"):
-            sys.exit(verify_all(lang, module=module or ("all" if args.exercise == "all" else "core")))
+            sys.exit(verify_all(lang, module=module or ("all" if args.exercise == "all" else "core"), use_mock=use_mock))
         exercise = find_exercise(args.exercise, module=module)
         if not exercise:
             print(f"Exercise not found: {args.exercise}")
             sys.exit(1)
-        sys.exit(0 if verify_exercise(exercise, lang) else 1)
+        sys.exit(0 if verify_exercise(exercise, lang, use_mock=use_mock) else 1)
 
     if args.command == "watch":
-        sys.exit(_watch(lang, module=module or "core"))
+        sys.exit(_watch(lang, module=module or "core", use_mock=use_mock))
+
+    if args.command == "review":
+        if args.review_cmd == "rubric":
+            exercise = find_exercise(args.exercise, module=module) or next_incomplete(lang, module)
+            if not exercise:
+                sys.exit(1)
+            show_rubric(exercise)
+            return
+        if args.review_cmd == "submit":
+            exercise = find_exercise(args.exercise, module=module) or next_incomplete(lang, module)
+            if not exercise:
+                sys.exit(1)
+            sid = submit_for_review(exercise, lang, author=args.author)
+            print(f"Submitted: {sid}")
+            print("Ask a peer to run: codamlings review rubric", exercise.path.name)
+            return
+        if args.review_cmd == "pending":
+            pending = list_pending()
+            if not pending:
+                print("No pending submissions.")
+                return
+            for item in pending:
+                print(f"  {item['id']} — {item['slug']} [{item['lang']}] by {item['author']}")
+            return
+        if args.review_cmd == "approve":
+            exercise = find_exercise(args.exercise, module=module)
+            if not exercise:
+                sys.exit(1)
+            approve_review(exercise, lang, reviewer=args.reviewer)
+            return
+        review_p.print_help()
 
 
 if __name__ == "__main__":

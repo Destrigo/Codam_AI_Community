@@ -1,0 +1,19 @@
+[
+  {
+    "Artikelnummer": "DE-991",
+    "Bezeichnung": "Business Laptop 15",
+    "Hersteller": "TechWerk GmbH",
+    "Kategorie": "Notebook",
+    "Preis": "999,00",
+    "Waehrung": "EUR",
+    "Speicher": "1TB SSD"
+  },
+  {
+    "Artikelnummer": "DE-992",
+    "Bezeichnung": "Kabellose Kopfhoerer",
+    "Hersteller": "SoundCo",
+    "Kategorie": "Audio",
+    "Preis": "79,90",
+    "Waehrung": "EUR"
+  }
+]

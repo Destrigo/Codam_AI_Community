@@ -1,0 +1,33 @@
+From: billing@acmesupplies.example
+To: ap@ledgerfirst.example
+Subject: Fattura 2026/0042 - LedgerFirst SpA
+
+Buongiorno,
+
+in allegato fattura per fornitura componenti.
+
+---
+FATTURA N. 2026/0042
+Data: 15/03/2026
+Scadenza: 14/04/2026
+
+Fornitore: Acme Supplies S.r.l.
+P.IVA: IT12345678901
+Via Industria 1, Milano
+
+Cliente: LedgerFirst SpA
+P.IVA: IT98765432109
+
+Descrizione                    Q.tà   Prezzo    IVA
+Viti M8 box (ref PO-7781)      100    2.50      22%
+Dadi M8 box                    100    1.80      22%
+
+Imponibile: EUR 430.00
+IVA 22%: EUR 94.60
+Totale: EUR 524.60
+
+IBAN: IT60X0542811101000000123456
+---
+
+Cordiali saluti,
+Acme Supplies

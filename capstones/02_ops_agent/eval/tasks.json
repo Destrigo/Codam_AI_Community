@@ -1,0 +1,20 @@
+[
+  {
+    "id": "t01",
+    "task": "Find the Q1 discount cap and calculate 15% of 12000",
+    "min_steps": 2,
+    "expects_report": false
+  },
+  {
+    "id": "t02",
+    "task": "Search for P1 on-call response time, then write a report titled OnCall Summary with that finding",
+    "min_steps": 2,
+    "expects_report": true
+  },
+  {
+    "id": "t03",
+    "task": "Calculate 20% of 50000",
+    "min_steps": 1,
+    "expects_report": false
+  }
+]

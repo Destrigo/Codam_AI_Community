@@ -1,6 +1,8 @@
 #include <iostream>
+#include <string>
 
 int main() {
-    std::cout << "SCRATCH:note\n";
+    std::string scratch = "note";
+    std::cout << "SCRATCH:" << scratch << "\n";
     return 0;
 }

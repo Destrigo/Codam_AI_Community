@@ -1,0 +1,18 @@
+{
+  "channel": "mobile_app",
+  "submitted_at": "2026-03-07T08:15:00Z",
+  "policy_number": "POL-P-550100",
+  "user_text": "Water leak from upstairs neighbor damaged my living room ceiling. Happened last night. No injuries. Photos attached.",
+  "structured_hints": {
+    "loss_category_user_selected": "property",
+    "injuries": false
+  },
+  "attachments": [
+    {"type": "image", "id": "img-001", "caption": "ceiling damage"},
+    {"type": "image", "id": "img-002", "caption": "water stain"}
+  ],
+  "geo": {
+    "city": "Turin",
+    "country": "IT"
+  }
+}

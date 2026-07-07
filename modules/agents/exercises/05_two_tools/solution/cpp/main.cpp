@@ -1,6 +1,10 @@
+#include "codam_llm.hpp"
 #include <iostream>
 
 int main() {
-    std::cout << "AGENT_TOOLS_OK\n";
+    nlohmann::json messages = nlohmann::json::array({
+        {{"role", "user"}, {"content", "agent two tools"}},
+    });
+    std::cout << codam::chat_completion(messages) << "\n";
     return 0;
 }

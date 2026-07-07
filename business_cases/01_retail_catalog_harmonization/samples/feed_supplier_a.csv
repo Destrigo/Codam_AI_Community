@@ -1,0 +1,5 @@
+supplier_sku,product_name,brand,category,price_eur,color,storage_gb
+SKU-A100,Galaxy Phone X,Samsung,cell phone,899.00,black,128
+SKU-A101,Galaxy Phone X,Samsung,smartphone,899.00,white,256
+SKU-A200,ProBook 14,Acme,laptop,1299.50,,512
+SKU-A300,Wireless Headphones Pro,SoundCo,headphones,149.99,blue,

@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace codam {
 
@@ -46,7 +47,8 @@ inline httplib::Headers api_headers() {
     return headers;
 }
 
-inline std::string chat_completion(const nlohmann::json& messages, int max_tokens = -1) {
+inline std::string chat_completion(const nlohmann::json& messages, int max_tokens = -1,
+                                   const nlohmann::json& extra = nlohmann::json::object()) {
     auto [host, prefix] = parse_api_base(mistral_api_base());
     httplib::Client cli(host);
     cli.set_connection_timeout(30, 0);
@@ -54,12 +56,28 @@ inline std::string chat_completion(const nlohmann::json& messages, int max_token
     if (max_tokens >= 0) {
         payload["max_tokens"] = max_tokens;
     }
+    for (auto it = extra.begin(); it != extra.end(); ++it) {
+        payload[it.key()] = it.value();
+    }
     auto res = cli.Post(prefix + "/chat/completions", api_headers(), payload.dump(), "application/json");
     if (!res || res->status != 200) {
         throw std::runtime_error("chat completion failed");
     }
     return nlohmann::json::parse(res->body)
         .at("choices").at(0).at("message").at("content").get<std::string>();
+}
+
+inline std::vector<double> embeddings(const std::string& input, const std::string& model = "mistral-embed") {
+    auto [host, prefix] = parse_api_base(mistral_api_base());
+    httplib::Client cli(host);
+    cli.set_connection_timeout(30, 0);
+    nlohmann::json payload = {{"model", model}, {"input", input}};
+    auto res = cli.Post(prefix + "/embeddings", api_headers(), payload.dump(), "application/json");
+    if (!res || res->status != 200) {
+        throw std::runtime_error("embeddings failed");
+    }
+    return nlohmann::json::parse(res->body)
+        .at("data").at(0).at("embedding").get<std::vector<double>>();
 }
 
 inline void append_sse_chunks(const std::string& body, std::string& output) {

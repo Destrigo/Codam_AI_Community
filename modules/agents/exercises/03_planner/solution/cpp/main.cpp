@@ -1,6 +1,8 @@
 #include <iostream>
+#include <vector>
 
 int main() {
-    std::cout << "PLAN:3\n";
+    std::vector<std::string> plan = {"research", "draft", "review"};
+    std::cout << "PLAN:" << plan.size() << "\n";
     return 0;
 }

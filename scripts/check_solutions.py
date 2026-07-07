@@ -1,4 +1,4 @@
-"""Verify exercises using reference solutions (dev check)."""
+"""Verify exercises using reference solutions (dev / CI check)."""
 
 from __future__ import annotations
 
@@ -9,14 +9,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from codamlings.config import load_dotenv_if_present
 from codamlings.exercises import ALL_EXERCISES, exercises_for
 from codamlings.verify import verify_exercise
+
+load_dotenv_if_present()
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--lang", choices=["python", "cpp"], default="python")
     parser.add_argument("--module", default="all")
+    parser.add_argument("--mock", action="store_true", help="Use offline mock (CI default)")
     args = parser.parse_args()
 
     pool = ALL_EXERCISES if args.module == "all" else exercises_for(args.module)
@@ -34,7 +38,7 @@ def main() -> int:
                 continue
             backups.append((dst, dst.read_text(encoding="utf-8") if dst.exists() else None))
             dst.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
-            if verify_exercise(exercise, lang):
+            if verify_exercise(exercise, lang, use_mock=args.mock):
                 passed += 1
     finally:
         for dst, original in backups:
