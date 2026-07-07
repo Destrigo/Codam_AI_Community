@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codamlings"
+version = "0.1.0"
+description = "Interactive AI exercises for Python and C++ — Codam AI Community"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+codamlings = "codamlings.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["codamlings*"]

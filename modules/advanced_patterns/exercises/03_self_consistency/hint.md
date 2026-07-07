@@ -1,0 +1,2 @@
+# Hint
+Counter most common.

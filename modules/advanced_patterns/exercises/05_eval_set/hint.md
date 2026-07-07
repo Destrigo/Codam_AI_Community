@@ -1,0 +1,2 @@
+# Hint
+Count passing assertions.

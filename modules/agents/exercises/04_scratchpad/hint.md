@@ -1,0 +1,2 @@
+# Hint
+Variable scratchpad string.

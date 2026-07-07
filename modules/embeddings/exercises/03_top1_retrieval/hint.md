@@ -1,0 +1,2 @@
+# Hint
+Max cosine wins.

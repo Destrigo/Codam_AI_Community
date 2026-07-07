@@ -1,0 +1,13 @@
+.env
+.codamlings/
+riassunto.md
+shared/cpp/vendor/nlohmann/
+shared/cpp/vendor/httplib.h
+__pycache__/
+*.pyc
+build/
+**/build/
+dist/
+*.egg-info/
+.vscode/
+.idea/

@@ -1,0 +1,9 @@
+import json, os, urllib.request
+def main():
+    base=os.environ.get("MISTRAL_API_BASE","https://api.mistral.ai/v1").rstrip("/")
+    ctx="The answer is 42"
+    payload={"model":"mistral-small-latest","messages":[{"role":"user","content":f"rag pipeline context: {ctx}"}]}
+    req=urllib.request.Request(f"{base}/chat/completions",data=json.dumps(payload).encode(),method="POST")
+    req.add_header("Content-Type","application/json")
+    with urllib.request.urlopen(req,timeout=30) as r: print(json.loads(r.read())["choices"][0]["message"]["content"])
+if __name__=="__main__": main()

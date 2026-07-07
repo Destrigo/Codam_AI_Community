@@ -1,0 +1,2 @@
+# Hint
+len(subtasks).
