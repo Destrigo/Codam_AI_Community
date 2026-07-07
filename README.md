@@ -2,6 +2,8 @@
 
 Interactive [Rustlings](https://github.com/rust-lang/rustlings)-style exercises to learn AI/LLM with **Python** and **C++**.
 
+> New here? Start with the **[Student Onboarding Guide](ONBOARDING.md)**.
+
 ## Structure
 
 ```
