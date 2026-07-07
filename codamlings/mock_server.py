@@ -78,11 +78,34 @@ class _MockHandler(BaseHTTPRequestHandler):
             return "LOCAL_OK"
         if "critique revise" in ul:
             return "REVISED_OK"
+        if "mcp bridge" in ul:
+            return "MCP_BRIDGE_OK"
+        if "ollama chat" in ul:
+            return "OLLAMA_CHAT_OK"
+        if "ollama stream" in ul:
+            return "OLLAMA_STREAM_OK"
         return f"MOCK_RESPONSE:{user or 'hello'}"
 
     def do_GET(self) -> None:
         if self.path.endswith("/fail_twice"):
             self._handle_fail_twice()
+            return
+        if "/mcp/tools" in self.path:
+            self._send_json({"tools": [{"name": "search"}, {"name": "calculator"}]})
+            return
+        if "/mcp/resources/" in self.path:
+            self._send_json({"content": "RESOURCE_OK: policy v1"})
+            return
+        if self.path.endswith("/api/version"):
+            self._send_json({"version": "0.5.7-mock"})
+            return
+        if self.path.endswith("/api/tags"):
+            self._send_json({
+                "models": [
+                    {"name": "llama3.2:latest"},
+                    {"name": "nomic-embed-text:latest"},
+                ],
+            })
             return
         self._send_json({"error": "not found"}, status=404)
 
@@ -91,7 +114,11 @@ class _MockHandler(BaseHTTPRequestHandler):
             self._handle_fail_twice()
             return
 
-        if self.path.endswith("/embeddings"):
+        if self.path.endswith("/api/embeddings"):
+            self._send_json({"embedding": [0.1, 0.2, 0.3]})
+            return
+
+        if self.path.endswith("/v1/embeddings") or self.path == "/embeddings":
             self._send_json({
                 "data": [{"embedding": [0.1, 0.2, 0.3], "index": 0}],
                 "model": "mistral-embed",
@@ -105,6 +132,35 @@ class _MockHandler(BaseHTTPRequestHandler):
         if self.path.endswith("/echo"):
             req = self._read_json()
             self._send_json({"json": req})
+            return
+
+        if "/mcp/call" in self.path:
+            self._send_json({"result": "MCP_CALL_OK:search"})
+            return
+
+        if "/mcp/initialize" in self.path:
+            self._send_json({"session_id": "mock-session-1", "protocol": "2024-11-05"})
+            return
+
+        if self.path.endswith("/api/chat"):
+            req = self._read_json()
+            messages = req.get("messages", [])
+            user = next((m["content"] for m in messages if m.get("role") == "user"), "")
+            content = self._chat_content(req, user, "", messages)
+            if req.get("stream"):
+                self.send_response(200)
+                self.send_header("Content-Type", "application/x-ndjson")
+                self.end_headers()
+                for word in content.split():
+                    chunk = {"message": {"role": "assistant", "content": word + " "}, "done": False}
+                    self.wfile.write((json.dumps(chunk) + "\n").encode("utf-8"))
+                self.wfile.write((json.dumps({"done": True}) + "\n").encode("utf-8"))
+                return
+            self._send_json({
+                "model": req.get("model", "llama3.2"),
+                "message": {"role": "assistant", "content": content},
+                "done": True,
+            })
             return
 
         if not self.path.endswith("/chat/completions"):

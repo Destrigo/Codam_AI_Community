@@ -1,0 +1,7 @@
+"""TODO: Ollama model env."""
+
+def main() -> None:
+    pass
+
+if __name__ == "__main__":
+    main()

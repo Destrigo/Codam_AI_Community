@@ -71,9 +71,14 @@ def exercise_env(use_mock: bool, mock_base: str | None = None) -> dict[str, str]
         apply_mistral_env(env, mock_base=mock_base)
         echo_root = mock_base.rsplit("/v1", 1)[0]
         env["CODAMLINGS_ECHO_URL"] = f"{echo_root}/echo"
+        env["CODAMLINGS_MCP_BASE"] = f"{echo_root}/mcp"
+        env["CODAMLINGS_OLLAMA_BASE"] = echo_root
+        env.setdefault("OLLAMA_MODEL", "llama3.2")
     else:
         apply_mistral_env(env, mock_base=None)
         env.setdefault("CODAMLINGS_ECHO_URL", "https://httpbin.org/post")
+        env.setdefault("CODAMLINGS_OLLAMA_BASE", "http://localhost:11434")
+        env.setdefault("OLLAMA_MODEL", "llama3.2")
     return env
 
 

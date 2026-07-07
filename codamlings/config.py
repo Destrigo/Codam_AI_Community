@@ -35,7 +35,8 @@ def require_mistral_key() -> None:
     if not mistral_api_key():
         print(
             "MISTRAL_API_KEY is required for live exercises.\n"
-            "Copy .env.example to .env and set your key from https://console.mistral.ai\n"
+            "Copy .env.example to .env at the repo root and set your personal key "
+            "(https://console.mistral.ai).\n"
             "Use --mock only for offline CI/testing.",
             file=sys.stderr,
         )

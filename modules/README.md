@@ -13,11 +13,16 @@ Complete `core/` first, then pick any module independently.
 | `local_llm` | 4 | Local/offline inference |
 | `production` | 6 | Cache, guardrails, testing |
 | `advanced_patterns` | 5 | Map-reduce, routing, eval |
+| `mcp` | 6 | Model Context Protocol (tools, resources) |
+| `security` | 6 | Injection, secrets, PII, red team |
+| `ollama` | 6 | Local models via Ollama HTTP API |
 
 ```bash
-codamlings list --module rag
-codamlings verify all --module prompt_engineering
+codamlings list --module ollama
+codamlings verify all --module security
 codamlings watch --module agents
 ```
 
-**Total: 10 core + 50 module = 60 exercises**
+**Total: 10 core + 68 module = 78 exercises**
+
+Both **Python** and **C++** tracks share the same README, verify checks, and mock/live modes.

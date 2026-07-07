@@ -1,0 +1,8 @@
+# Peer Review — Ollama Streaming Chat
+
+- [ ] `codamlings run ollama/05_stream_chat --lang python`
+- [ ] Ollama running locally (`ollama serve`) or use `--mock` for offline verify
+- [ ] No API keys in source — configure `OLLAMA_*` in repo root `.env`
+
+## Approve
+`codamlings review approve ollama/05_stream_chat --lang python --reviewer YOUR_NAME`

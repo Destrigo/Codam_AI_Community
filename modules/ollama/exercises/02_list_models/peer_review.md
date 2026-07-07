@@ -1,0 +1,8 @@
+# Peer Review — List Ollama Models
+
+- [ ] `codamlings run ollama/02_list_models --lang python`
+- [ ] Ollama running locally (`ollama serve`) or use `--mock` for offline verify
+- [ ] No API keys in source — configure `OLLAMA_*` in repo root `.env`
+
+## Approve
+`codamlings review approve ollama/02_list_models --lang python --reviewer YOUR_NAME`

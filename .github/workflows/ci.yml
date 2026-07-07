@@ -18,6 +18,8 @@ jobs:
         run: pip install -e .
       - name: Verify all exercises (mock — no API key)
         run: python scripts/check_solutions.py --lang python --mock
+      - name: Verify all exercises C++ (mock)
+        run: python scripts/check_solutions.py --lang cpp --mock
       - name: Verify capstones and business cases (mock)
         run: python scripts/verify_extended.py --mock
 

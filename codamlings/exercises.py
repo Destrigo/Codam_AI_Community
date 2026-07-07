@@ -58,6 +58,9 @@ MODULE_NAMES = [
     "local_llm",
     "production",
     "advanced_patterns",
+    "mcp",
+    "security",
+    "ollama",
 ]
 
 CORE_EXERCISES: list[Exercise] = [

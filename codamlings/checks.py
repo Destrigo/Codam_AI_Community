@@ -20,6 +20,11 @@ NO_MISTRAL_SLUGS = {
     "production/05_fallback", "production/06_output_test",
     "advanced_patterns/01_map_reduce", "advanced_patterns/02_router",
     "advanced_patterns/03_self_consistency", "advanced_patterns/05_eval_set",
+    "mcp/01_tool_manifest", "mcp/02_list_tools", "mcp/03_call_tool", "mcp/04_resource_read",
+    "mcp/05_client_session",
+    "security/01_detect_injection", "security/02_sanitize_input", "security/03_secret_scan",
+    "security/04_prompt_boundary", "security/05_pii_redact", "security/06_red_team",
+    "ollama/01_check_version", "ollama/02_list_models", "ollama/04_model_env",
 }
 
 # slug -> substrings required in stdout (mock mode)
@@ -84,6 +89,24 @@ MOCK_CHECKS: dict[str, list[str]] = {
     "advanced_patterns/03_self_consistency": ["VOTE:2"],
     "advanced_patterns/04_critique_revise": ["REVISED_OK"],
     "advanced_patterns/05_eval_set": ["EVAL:4/5"],
+    "mcp/01_tool_manifest": ["MANIFEST_OK:2"],
+    "mcp/02_list_tools": ["TOOLS_OK:2"],
+    "mcp/03_call_tool": ["MCP_CALL_OK"],
+    "mcp/04_resource_read": ["RESOURCE_OK"],
+    "mcp/05_client_session": ["SESSION_OK:mock-session-1"],
+    "mcp/06_bridge_llm": ["MCP_BRIDGE_OK"],
+    "security/01_detect_injection": ["INJECTION_DETECTED"],
+    "security/02_sanitize_input": ["SANITIZED_OK:hello"],
+    "security/03_secret_scan": ["SECRET_SCAN_OK"],
+    "security/04_prompt_boundary": ["BOUNDARY_OK:2"],
+    "security/05_pii_redact": ["PII_REDACTED"],
+    "security/06_red_team": ["REDTEAM_BLOCKED"],
+    "ollama/01_check_version": ["OLLAMA_OK:0.5.7-mock"],
+    "ollama/02_list_models": ["MODELS_OK:2"],
+    "ollama/03_chat": ["OLLAMA_CHAT_OK"],
+    "ollama/04_model_env": ["MODEL_OK:llama3.2"],
+    "ollama/05_stream_chat": ["OLLAMA_STREAM_OK"],
+    "ollama/06_embeddings": ["EMBED_DIM:3"],
 }
 
 
@@ -144,6 +167,10 @@ LIVE_VALIDATORS: dict[str, Callable[[str], bool]] = {
     "local_llm/04_local_embeddings": _non_empty,
     "production/01_rate_limit": lambda o: "RETRY_OK" in o or "RATE_OK" in o,
     "advanced_patterns/04_critique_revise": _non_empty,
+    "mcp/06_bridge_llm": _non_empty,
+    "ollama/03_chat": _non_empty,
+    "ollama/05_stream_chat": _non_empty,
+    "ollama/06_embeddings": _embed_dim_ok,
 }
 
 

@@ -6,13 +6,37 @@ Interactive [Rustlings](https://github.com/rust-lang/rustlings)-style exercises 
 
 ```
 core/           ← common track (10 exercises)
-modules/        ← 9 stand-alone categories (50 exercises)
+modules/        ← 12 stand-alone categories (68 exercises)
 capstones/      ← 3 final projects (after modules)
 business_cases/ ← 3 real-world ingestion scenarios (workshops)
 codamlings/     ← terminal CLI
 ```
 
-**60 exercises** + **3 capstones** + **3 business cases**.
+**78 exercises** + **3 capstones** + **3 business cases**.
+
+## System requirements
+
+Codamlings runs on **Windows, macOS, and Linux**. No administrator privileges are required.
+
+| Component | Python track | C++ track (`--lang cpp`) |
+|-----------|--------------|---------------------------|
+| Python | **3.10+** | Same (CLI + verify) |
+| Build tools | — | **CMake 3.16+**, C++17 compiler |
+| Compiler | — | MSVC (Windows), gcc/clang (Linux/macOS) |
+
+**Optional (live mode, by module):**
+
+| Service | Used for | Notes |
+|---------|----------|-------|
+| [Mistral API](https://console.mistral.ai) | Most exercises | Personal `MISTRAL_API_KEY` in repo-root `.env` |
+| [Ollama](https://ollama.com/download) | `modules/ollama` | `ollama serve` + `ollama pull llama3.2` (and `nomic-embed-text` for embeddings) |
+| Internet | Live HTTP / API calls | `jsonplaceholder.typicode.com`, `httpbin.org`, cloud APIs |
+
+**Offline / CI:** `codamlings verify --mock` starts a local mock server on `127.0.0.1` — no API keys, no Ollama install, no internet (after the first C++ build, which may download header-only deps via CMake).
+
+**Environment constraints:** corporate firewalls or proxies may block cloud APIs or GitHub downloads. If live verify fails but `--mock` passes, check network access first.
+
+Official CI runs on **Ubuntu** (GitHub Actions). Student machines on Windows or macOS are supported; report platform-specific issues if C++ builds fail.
 
 ## Quick start
 
@@ -47,13 +71,13 @@ codamlings verify all
 
 ```bash
 cp .env.example .env
-# Required for live verify/run (default):
+# One .env at repo root — your personal Mistral key for every exercise:
 export MISTRAL_API_KEY=sk-...
 export MISTRAL_API_BASE=https://api.mistral.ai/v1
 export MISTRAL_MODEL=mistral-small-latest
 ```
 
-Live mode uses your real Mistral key. Use `--mock` only for offline testing.
+Each student manages their own key in `.env` (never commit it). Live mode uses that key for all `codamlings run` / `verify` commands. Use `--mock` only for offline testing.
 
 ## Completing exercises
 
