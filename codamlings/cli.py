@@ -17,6 +17,8 @@ from codamlings.exercises import (
     exercises_for,
 )
 from codamlings.review import approve_review, list_pending, show_rubric, submit_for_review
+from codamlings.capstones import CAPSTONES, find_capstone, run_capstone
+from codamlings.business_cases import CASES, find_case, run_case
 from codamlings.verify import run_exercise, verify_all, verify_exercise
 
 load_dotenv_if_present()
@@ -124,6 +126,22 @@ def main(argv: list[str] | None = None) -> None:
     approve_p.add_argument("exercise", help="Exercise slug")
     approve_p.add_argument("--reviewer", default="peer")
 
+    cap_p = sub.add_parser("capstone", help="Capstone projects")
+    cap_sub = cap_p.add_subparsers(dest="cap_cmd")
+    cap_sub.add_parser("list", help="List capstones")
+    cap_run = cap_sub.add_parser("run", help="Run capstone solution CLI")
+    cap_run.add_argument("name", help="Capstone slug or id")
+    cap_run.add_argument("args", nargs=argparse.REMAINDER, help="Args passed to capstone main.py")
+    cap_sol = cap_sub.add_parser("solution", help="Show capstone reference entrypoint path")
+    cap_sol.add_argument("name", help="Capstone slug")
+
+    bus_p = sub.add_parser("business", help="Business case pipelines")
+    bus_sub = bus_p.add_subparsers(dest="bus_cmd")
+    bus_sub.add_parser("list", help="List business cases")
+    bus_run = bus_sub.add_parser("run", help="Run business case pipeline")
+    bus_run.add_argument("name", help="Case slug or id")
+    bus_run.add_argument("args", nargs=argparse.REMAINDER, help="Extra args for pipeline")
+
     args = parser.parse_args(argv)
     lang: str = args.lang
     module: str | None = args.module
@@ -205,6 +223,42 @@ def main(argv: list[str] | None = None) -> None:
             approve_review(exercise, lang, reviewer=args.reviewer)
             return
         review_p.print_help()
+        return
+
+    if args.command == "capstone":
+        if args.cap_cmd == "list":
+            print("Capstones:\n")
+            for cap in CAPSTONES:
+                print(f"  {cap.slug} — {cap.title}")
+            return
+        cap = find_capstone(getattr(args, "name", None))
+        if not cap:
+            print("Capstone not found.")
+            sys.exit(1)
+        if args.cap_cmd == "solution":
+            print(cap.solution_main)
+            return
+        if args.cap_cmd == "run":
+            extra = [a for a in getattr(args, "args", []) if a != "--"]
+            sys.exit(run_capstone(cap, extra, use_solution=True))
+        cap_p.print_help()
+        return
+
+    if args.command == "business":
+        if args.bus_cmd == "list":
+            print("Business cases:\n")
+            for case in CASES:
+                print(f"  {case.slug} — {case.title}")
+            return
+        case = find_case(getattr(args, "name", None))
+        if not case:
+            print("Business case not found.")
+            sys.exit(1)
+        if args.bus_cmd == "run":
+            extra = [a for a in getattr(args, "args", []) if a != "--"]
+            sys.exit(run_case(case, extra))
+        bus_p.print_help()
+        return
 
 
 if __name__ == "__main__":

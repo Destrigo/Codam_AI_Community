@@ -28,6 +28,24 @@ Complete **core + relevant modules** before starting a capstone.
 
 ## Completion
 
+Reference implementations live in `solution/python/` (instructor). Student stubs remain in `python/main.py`.
+
+```bash
+# Run reference capstone (solution)
+codamlings capstone run 01_doc_assistant_rag -- index --docs ./data
+codamlings capstone run 01_doc_assistant_rag -- ask --question "How many remote days?"
+codamlings capstone run 02_ops_agent -- eval
+codamlings capstone run 03_llm_gateway -- complete --prompt "Hello"
+
+# Business case pipelines
+codamlings business run 01_retail_catalog_harmonization
+codamlings business run 02_finance_invoice_ingestion
+codamlings business run 03_insurance_claims_intake
+
+# Verify all (mock, CI)
+python scripts/verify_extended.py --mock
+```
+
 Each capstone can be marked done via:
 
 1. **Milestone verify** — `codamlings capstone verify <name> --milestone N` (when implemented)

@@ -7,6 +7,9 @@ __pycache__/
 *.pyc
 build/
 **/build/
+capstones/**/data/.index/
+capstones/**/out/
+business_cases/**/out/
 dist/
 *.egg-info/
 .vscode/
