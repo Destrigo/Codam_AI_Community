@@ -7,10 +7,10 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from codamlings.exercises import Exercise, mark_complete
+from codam_ai_labs.exercises import Exercise, mark_complete
 
 ROOT = Path(__file__).resolve().parent.parent
-REVIEWS_DIR = ROOT / ".codamlings" / "reviews"
+REVIEWS_DIR = ROOT / ".codam-ai-labs" / "reviews"
 REVIEWS_INDEX = REVIEWS_DIR / "index.json"
 
 

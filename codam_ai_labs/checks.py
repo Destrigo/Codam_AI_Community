@@ -29,7 +29,7 @@ NO_MISTRAL_SLUGS = {
 
 # slug -> substrings required in stdout (mock mode)
 MOCK_CHECKS: dict[str, list[str]] = {
-    "01_env_vars": ["APP_NAME=codamlings"],
+    "01_env_vars": ["APP_NAME=codam-ai-labs"],
     "02_http_get": ["delectus aut autem"],
     "03_http_post": ["ECHO_OK:codam"],
     "04_llm_first_call": ["MOCK_RESPONSE"],

@@ -9,10 +9,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from codamlings.config import apply_mistral_env, load_dotenv_if_present
-from codamlings.mock_server import mock_api_base, start_mock_server
-from codamlings.capstones import CAPSTONES, run_capstone
-from codamlings.business_cases import CASES, run_case
+from codam_ai_labs.config import apply_mistral_env, load_dotenv_if_present
+from codam_ai_labs.mock_server import mock_api_base, start_mock_server
+from codam_ai_labs.capstones import CAPSTONES, run_capstone
+from codam_ai_labs.business_cases import CASES, run_case
 
 load_dotenv_if_present()
 
@@ -22,10 +22,10 @@ def _env(mock_base: str | None) -> dict[str, str]:
     if mock_base:
         apply_mistral_env(env, mock_base=mock_base)
         echo_root = mock_base.rsplit("/v1", 1)[0]
-        env["CODAMLINGS_ECHO_URL"] = f"{echo_root}/echo"
+        env["CODAM_LABS_ECHO_URL"] = f"{echo_root}/echo"
     else:
         apply_mistral_env(env, mock_base=None)
-    env["CODAMLINGS_AUTO_CONFIRM"] = "1"
+    env["CODAM_LABS_AUTO_CONFIRM"] = "1"
     return env
 
 

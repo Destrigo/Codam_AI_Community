@@ -33,7 +33,7 @@ Sources (heterogeneous)
 | Validate | Ambiguity flags | Hard rules (VAT, price > 0, policy exists) |
 | Export | Summaries for operators | API calls, audit logs |
 
-## Relationship to Codamlings
+## Relationship to Codam AI Labs
 
 | Business case | Closest modules |
 |---------------|-----------------|
@@ -46,15 +46,15 @@ Capstones teach **how to build**; business cases teach **where to apply** in ind
 ## Run pipelines
 
 ```bash
-codamlings business list
-codamlings business run 01_retail_catalog_harmonization
-codamlings business run 02_finance_invoice_ingestion
-codamlings business run 03_insurance_claims_intake
+codam-labs business list
+codam-labs business run 01_retail_catalog_harmonization
+codam-labs business run 02_finance_invoice_ingestion
+codam-labs business run 03_insurance_claims_intake
 ```
 
 Output is written to `out/` inside each case folder (`catalog.json`, `invoice_staging.json`, `claim_drafts.json`).
 
-Use `--mock` on `codamlings` when running without a live API key (rule-based extraction). Live mode uses Mistral for unstructured sources.
+Use `--mock` on `codam-labs` when running without a live API key (rule-based extraction). Live mode uses Mistral for unstructured sources.
 
 ## Synthetic data only
 

@@ -6,7 +6,7 @@
 #include <string>
 
 static std::string ollama_base() {
-    const char* env = std::getenv("CODAMLINGS_OLLAMA_BASE");
+    const char* env = std::getenv("CODAM_LABS_OLLAMA_BASE");
     return env ? std::string(env) : "http://localhost:11434";
 }
 

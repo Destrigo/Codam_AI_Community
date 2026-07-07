@@ -9,9 +9,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from codamlings.config import load_dotenv_if_present
-from codamlings.exercises import ALL_EXERCISES, exercises_for
-from codamlings.verify import verify_exercise
+from codam_ai_labs.config import load_dotenv_if_present
+from codam_ai_labs.exercises import ALL_EXERCISES, exercises_for
+from codam_ai_labs.verify import verify_exercise
 
 load_dotenv_if_present()
 

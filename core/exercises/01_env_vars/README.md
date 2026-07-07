@@ -13,9 +13,9 @@
 ### How it works
 
 ```bash
-export APP_NAME=codamlings   # Linux/macOS
-set APP_NAME=codamlings      # Windows CMD
-$env:APP_NAME="codamlings"   # PowerShell
+export APP_NAME=codam-ai-labs   # Linux/macOS
+set APP_NAME=codam-ai-labs      # Windows CMD
+$env:APP_NAME="codam-ai-labs"   # PowerShell
 ```
 
 The program reads them with `os.environ` (Python) or `std::getenv` (C++).
@@ -35,7 +35,7 @@ Read the environment variable `APP_NAME`.
 - If it is set, print: `APP_NAME=<value>`
 - If it is missing, print: `APP_NAME=MISSING`
 
-The verify command sets `APP_NAME=codamlings` automatically.
+The verify command sets `APP_NAME=codam-ai-labs` automatically.
 
 ## Files to modify
 
@@ -45,5 +45,5 @@ The verify command sets `APP_NAME=codamlings` automatically.
 ## Verify
 
 ```bash
-codamlings verify 01_env_vars
+codam-labs verify 01_env_vars
 ```

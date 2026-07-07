@@ -42,7 +42,7 @@ The key comes from `MISTRAL_API_KEY`. The endpoint from `MISTRAL_API_BASE` (defa
 
 [Mistral's API](https://docs.mistral.ai/api/) follows the same chat-completions format used by many providers. Write the client once; swap base URL and model as needed.
 
-### codamlings verify
+### codam-labs verify
 
 In verify mode, `MISTRAL_API_BASE` points to a local mock — no real API key needed.
 
@@ -62,6 +62,6 @@ With the mock, the output contains `MOCK_RESPONSE:hello`.
 ## Verify
 
 ```bash
-codamlings verify 04_llm_first_call
-codamlings run 04 --mock   # manual offline test
+codam-labs verify 04_llm_first_call
+codam-labs run 04 --mock   # manual offline test
 ```

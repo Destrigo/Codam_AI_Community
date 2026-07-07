@@ -9,8 +9,8 @@ import json
 import sys
 from pathlib import Path
 
-from codamlings.config import load_dotenv_if_present, require_mistral_key
-from codamlings.llm_client import chat_text, extract_json_object, is_mock_mode
+from codam_ai_labs.config import load_dotenv_if_present, require_mistral_key
+from codam_ai_labs.llm_client import chat_text, extract_json_object, is_mock_mode
 
 load_dotenv_if_present()
 

@@ -17,12 +17,12 @@ STUB_CPP = '#include <iostream>\n\nint main() {\n    // TODO: see README.md\n   
 
 PEER = """# Peer Review — {title}
 
-- [ ] `codamlings run {slug} --lang python`
+- [ ] `codam-labs run {slug} --lang python`
 - [ ] Ollama running locally (`ollama serve`) or use `--mock` for offline verify
 - [ ] No API keys in source — configure `OLLAMA_*` in repo root `.env`
 
 ## Approve
-`codamlings review approve {slug} --lang python --reviewer YOUR_NAME`
+`codam-labs review approve {slug} --lang python --reviewer YOUR_NAME`
 """
 
 
@@ -50,7 +50,7 @@ def write_ex(module: str, ex_id: str, readme: str, hint: str, sol: str, stub: st
     )
 
 
-OLLAMA_BASE = 'os.environ.get("CODAMLINGS_OLLAMA_BASE", "http://localhost:11434").rstrip("/")'
+OLLAMA_BASE = 'os.environ.get("CODAM_LABS_OLLAMA_BASE", "http://localhost:11434").rstrip("/")'
 
 write_ex(
     "ollama",
@@ -63,7 +63,7 @@ Check the daemon with `GET /api/version`.
 
 ## Assignment
 Call the version endpoint. Print `OLLAMA_OK:` + version string from JSON.""",
-    "Use `CODAMLINGS_OLLAMA_BASE` from env (set in mock verify). `urllib.request.urlopen`.",
+    "Use `CODAM_LABS_OLLAMA_BASE` from env (set in mock verify). `urllib.request.urlopen`.",
     f"""import json, os, urllib.request
 
 def main() -> None:
@@ -268,7 +268,7 @@ OLLAMA_BASE=http://localhost:11434
 OLLAMA_MODEL=llama3.2
 ```
 
-`codamlings verify --mock` uses a built-in mock — no Ollama install required for CI.
+`codam-labs verify --mock` uses a built-in mock — no Ollama install required for CI.
 
 Prerequisites: `core/`, `modules/local_llm`
 """,

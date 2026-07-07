@@ -5,5 +5,5 @@ def main():
     req=urllib.request.Request(f"{base}/embeddings",data=json.dumps(payload).encode(),method="POST")
     req.add_header("Content-Type","application/json")
     with urllib.request.urlopen(req,timeout=30) as r: r.read()
-    print("EMBED_SOURCE:mock" if os.environ.get("CODAMLINGS_MOCK") else "EMBED_SOURCE:api")
+    print("EMBED_SOURCE:mock" if os.environ.get("CODAM_LABS_MOCK") else "EMBED_SOURCE:api")
 if __name__=="__main__": main()

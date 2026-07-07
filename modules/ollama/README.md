@@ -27,6 +27,6 @@ OLLAMA_BASE=http://localhost:11434
 OLLAMA_MODEL=llama3.2
 ```
 
-`codamlings verify --mock` uses a built-in mock — no Ollama install required for CI.
+`codam-labs verify --mock` uses a built-in mock — no Ollama install required for CI.
 
 Prerequisites: `core/`, `modules/local_llm`

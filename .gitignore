@@ -1,4 +1,5 @@
 .env
+.codam-ai-labs/
 .codamlings/
 riassunto.md
 shared/cpp/vendor/nlohmann/

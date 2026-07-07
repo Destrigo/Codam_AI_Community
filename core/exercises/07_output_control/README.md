@@ -41,5 +41,5 @@ With the mock: `TOKEN_LIMIT_OK`
 ## Verify
 
 ```bash
-codamlings verify 07_output_control
+codam-labs verify 07_output_control
 ```

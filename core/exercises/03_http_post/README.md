@@ -50,5 +50,5 @@ Print: `ECHO_OK:codam` (extract `json.name` from the response).
 ## Verify
 
 ```bash
-codamlings verify 03_http_post
+codam-labs verify 03_http_post
 ```

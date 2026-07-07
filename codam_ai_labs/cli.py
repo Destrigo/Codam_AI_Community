@@ -1,4 +1,4 @@
-"""Codamlings CLI — rustlings-style."""
+"""Codam AI Labs CLI — rustlings-style."""
 
 from __future__ import annotations
 
@@ -7,8 +7,8 @@ import sys
 import time
 from pathlib import Path
 
-from codamlings.config import load_dotenv_if_present
-from codamlings.exercises import (
+from codam_ai_labs.config import load_dotenv_if_present
+from codam_ai_labs.exercises import (
     CORE_EXERCISES,
     MODULE_NAMES,
     find_exercise,
@@ -16,10 +16,10 @@ from codamlings.exercises import (
     next_incomplete,
     exercises_for,
 )
-from codamlings.review import approve_review, list_pending, show_rubric, submit_for_review
-from codamlings.capstones import CAPSTONES, find_capstone, run_capstone
-from codamlings.business_cases import CASES, find_case, run_case
-from codamlings.verify import run_exercise, verify_all, verify_exercise
+from codam_ai_labs.review import approve_review, list_pending, show_rubric, submit_for_review
+from codam_ai_labs.capstones import CAPSTONES, find_capstone, run_capstone
+from codam_ai_labs.business_cases import CASES, find_case, run_case
+from codam_ai_labs.verify import run_exercise, verify_all, verify_exercise
 
 load_dotenv_if_present()
 
@@ -36,7 +36,7 @@ def _print_list(lang: str, module: str | None) -> None:
             exs = exercises_for(name)
             done = sum(1 for e in exs if is_complete(e.slug, lang))
             print(f"  {name}: {done}/{len(exs)}")
-        print("\nUse: codamlings list --module rag")
+        print("\nUse: codam-labs list --module rag")
         return
     if module != "core":
         print(f"\n{module} exercises:\n")
@@ -94,7 +94,7 @@ def _watch(lang: str, module: str | None, use_mock: bool) -> int:
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(prog="codamlings", description="Interactive AI exercises")
+    parser = argparse.ArgumentParser(prog="codam-labs", description="Interactive AI exercises")
     parser.add_argument("--lang", choices=["python", "cpp"], default="python")
     parser.add_argument("--module", choices=["core", *MODULE_NAMES, "all"], default=None)
     parser.add_argument("--mock", action="store_true", help="Offline mock (CI only)")
@@ -155,11 +155,11 @@ def main(argv: list[str] | None = None) -> None:
             if readme.exists():
                 print(readme.read_text(encoding="utf-8"))
             print("\nUseful commands:")
-            print(f"  codamlings run {exercise.path.name} --lang {lang}")
-            print(f"  codamlings verify {exercise.path.name} --lang {lang}")
-            print(f"  codamlings review rubric {exercise.path.name}")
+            print(f"  codam-labs run {exercise.path.name} --lang {lang}")
+            print(f"  codam-labs verify {exercise.path.name} --lang {lang}")
+            print(f"  codam-labs review rubric {exercise.path.name}")
         else:
-            print("Core complete! Try: codamlings list --module rag")
+            print("Core complete! Try: codam-labs list --module rag")
         return
 
     if args.command == "list":
@@ -206,7 +206,7 @@ def main(argv: list[str] | None = None) -> None:
                 sys.exit(1)
             sid = submit_for_review(exercise, lang, author=args.author)
             print(f"Submitted: {sid}")
-            print("Ask a peer to run: codamlings review rubric", exercise.path.name)
+            print("Ask a peer to run: codam-labs review rubric", exercise.path.name)
             return
         if args.review_cmd == "pending":
             pending = list_pending()

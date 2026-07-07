@@ -52,5 +52,5 @@ Expected output (with mock): `HELLO`
 ## Verify
 
 ```bash
-codamlings verify 05_system_user_prompts
+codam-labs verify 05_system_user_prompts
 ```

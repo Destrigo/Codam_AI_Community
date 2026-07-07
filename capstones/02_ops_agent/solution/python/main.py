@@ -9,8 +9,8 @@ import re
 import sys
 from pathlib import Path
 
-from codamlings.config import load_dotenv_if_present, require_mistral_key
-from codamlings.llm_client import chat_text, is_mock_mode
+from codam_ai_labs.config import load_dotenv_if_present, require_mistral_key
+from codam_ai_labs.llm_client import chat_text, is_mock_mode
 
 load_dotenv_if_present()
 
@@ -78,7 +78,7 @@ def calculator(expression: str) -> str:
 
 
 def write_report(title: str, summary: str, figures: dict | None = None) -> str:
-    auto = os.environ.get("CODAMLINGS_AUTO_CONFIRM", "").lower() in {"1", "true", "yes"}
+    auto = os.environ.get("CODAM_LABS_AUTO_CONFIRM", "").lower() in {"1", "true", "yes"}
     if not auto:
         ans = input("CONFIRM? write report to ./out/report.json [y/N] ").strip().lower()
         if ans != "y":
@@ -177,7 +177,7 @@ def cmd_tool(data_dir: Path, name: str, query: str, expr: str) -> int:
         calculator(expr)
         return 0
     if name == "write_report":
-        os.environ.setdefault("CODAMLINGS_AUTO_CONFIRM", "1")
+        os.environ.setdefault("CODAM_LABS_AUTO_CONFIRM", "1")
         write_report("Test", "summary")
         return 0
     return 1
@@ -188,7 +188,7 @@ def cmd_eval(data_dir: Path) -> int:
     tasks_path = capstone_root / "eval" / "tasks.json"
     tasks = json.loads(tasks_path.read_text(encoding="utf-8"))
     passed = 0
-    os.environ["CODAMLINGS_AUTO_CONFIRM"] = "1"
+    os.environ["CODAM_LABS_AUTO_CONFIRM"] = "1"
     report_path = Path("out/report.json")
     for task in tasks:
         if report_path.exists():

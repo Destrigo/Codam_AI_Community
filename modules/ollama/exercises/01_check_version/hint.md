@@ -1,1 +1,1 @@
-Use `CODAMLINGS_OLLAMA_BASE` from env (set in mock verify). `urllib.request.urlopen`.
+Use `CODAM_LABS_OLLAMA_BASE` from env (set in mock verify). `urllib.request.urlopen`.

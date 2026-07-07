@@ -46,5 +46,5 @@ Expected output (mock): `MOCK_RESPONSE:hello ` (or similar, must contain `MOCK_R
 ## Verify
 
 ```bash
-codamlings verify 08_streaming
+codam-labs verify 08_streaming
 ```

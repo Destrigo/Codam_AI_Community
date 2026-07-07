@@ -44,5 +44,5 @@ When an agent must pass structured data to code (tool args, filters, entities), 
 ## Verify
 
 ```bash
-codamlings verify 10_dirty_json
+codam-labs verify 10_dirty_json
 ```

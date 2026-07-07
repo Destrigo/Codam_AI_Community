@@ -1,4 +1,4 @@
-# Codam AI Community — Codamlings
+# Codam AI Community — Codam AI Labs
 
 Interactive [Rustlings](https://github.com/rust-lang/rustlings)-style exercises to learn AI/LLM with **Python** and **C++**.
 
@@ -9,14 +9,14 @@ core/           ← common track (10 exercises)
 modules/        ← 12 stand-alone categories (68 exercises)
 capstones/      ← 3 final projects (after modules)
 business_cases/ ← 3 real-world ingestion scenarios (workshops)
-codamlings/     ← terminal CLI
+codam_ai_labs/  ← terminal CLI (package)
 ```
 
 **78 exercises** + **3 capstones** + **3 business cases**.
 
 ## System requirements
 
-Codamlings runs on **Windows, macOS, and Linux**. No administrator privileges are required.
+Codam AI Labs runs on **Windows, macOS, and Linux**. No administrator privileges are required.
 
 | Component | Python track | C++ track (`--lang cpp`) |
 |-----------|--------------|---------------------------|
@@ -32,7 +32,7 @@ Codamlings runs on **Windows, macOS, and Linux**. No administrator privileges ar
 | [Ollama](https://ollama.com/download) | `modules/ollama` | `ollama serve` + `ollama pull llama3.2` (and `nomic-embed-text` for embeddings) |
 | Internet | Live HTTP / API calls | `jsonplaceholder.typicode.com`, `httpbin.org`, cloud APIs |
 
-**Offline / CI:** `codamlings verify --mock` starts a local mock server on `127.0.0.1` — no API keys, no Ollama install, no internet (after the first C++ build, which may download header-only deps via CMake).
+**Offline / CI:** `codam-labs verify --mock` starts a local mock server on `127.0.0.1` — no API keys, no Ollama install, no internet (after the first C++ build, which may download header-only deps via CMake).
 
 **Environment constraints:** corporate firewalls or proxies may block cloud APIs or GitHub downloads. If live verify fails but `--mock` passes, check network access first.
 
@@ -42,28 +42,28 @@ Official CI runs on **Ubuntu** (GitHub Actions). Student machines on Windows or 
 
 ```bash
 pip install -e .
-codamlings          # show next exercise
-codamlings watch    # verify loop on save
-codamlings list     # progress
-codamlings verify all
+codam-labs          # show next exercise
+codam-labs watch    # verify loop on save
+codam-labs list     # progress
+codam-labs verify all
 ```
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `codamlings` | Next incomplete exercise + README |
-| `codamlings list` | List exercises and status |
-| `codamlings run [slug]` | Run an exercise (live Mistral by default) |
-| `codamlings verify [slug\|all]` | Verify output (live Mistral by default) |
-| `codamlings verify all --module rag` | Verify a whole module |
-| `codamlings list --module all` | Progress across modules |
-| `codamlings hint [slug]` | Peer review rubric + hint (not solution) |
-| `codamlings hint [slug] --solution` | Instructor solution only |
-| `codamlings review rubric [slug]` | Show peer review checklist |
-| `codamlings review submit [slug]` | Submit code for peer review |
-| `codamlings review approve [slug]` | Approve peer review (marks complete) |
-| `codamlings watch` | Rustlings-style mode |
+| `codam-labs` | Next incomplete exercise + README |
+| `codam-labs list` | List exercises and status |
+| `codam-labs run [slug]` | Run an exercise (live Mistral by default) |
+| `codam-labs verify [slug\|all]` | Verify output (live Mistral by default) |
+| `codam-labs verify all --module rag` | Verify a whole module |
+| `codam-labs list --module all` | Progress across modules |
+| `codam-labs hint [slug]` | Peer review rubric + hint (not solution) |
+| `codam-labs hint [slug] --solution` | Instructor solution only |
+| `codam-labs review rubric [slug]` | Show peer review checklist |
+| `codam-labs review submit [slug]` | Submit code for peer review |
+| `codam-labs review approve [slug]` | Approve peer review (marks complete) |
+| `codam-labs watch` | Rustlings-style mode |
 | `--lang python\|cpp` | Language (default: python) |
 | `--mock` | Offline mock server (CI / no API key) |
 
@@ -77,16 +77,16 @@ export MISTRAL_API_BASE=https://api.mistral.ai/v1
 export MISTRAL_MODEL=mistral-small-latest
 ```
 
-Each student manages their own key in `.env` (never commit it). Live mode uses that key for all `codamlings run` / `verify` commands. Use `--mock` only for offline testing.
+Each student manages their own key in `.env` (never commit it). Live mode uses that key for all `codam-labs run` / `verify` commands. Use `--mock` only for offline testing.
 
 ## Completing exercises
 
 Two paths to mark an exercise **done**:
 
-1. **Automated verify** — `codamlings verify <slug>` (checks output against rubric)
-2. **Peer review** — `codamlings review submit` → peer runs `review rubric` → `review approve`
+1. **Automated verify** — `codam-labs verify <slug>` (checks output against rubric)
+2. **Peer review** — `codam-labs review submit` → peer runs `review rubric` → `review approve`
 
-Students should use `codamlings hint` (shows `peer_review.md`), not `solution/`.
+Students should use `codam-labs hint` (shows `peer_review.md`), not `solution/`.
 
 ## Philosophy
 

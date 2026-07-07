@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install codamlings
+      - name: Install codam-labs
         run: pip install -e .
       - name: Verify all exercises (mock — no API key)
         run: python scripts/check_solutions.py --lang python --mock
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install codamlings
+      - name: Install codam-labs
         run: pip install -e .
       - name: Verify core live (Mistral)
         env:
@@ -41,4 +41,4 @@ jobs:
             echo "MISTRAL_API_KEY not set — skipping live verify"
             exit 0
           fi
-          codamlings verify all --module core --lang python
+          codam-labs verify all --module core --lang python

@@ -48,5 +48,5 @@ Expected output: `delectus aut autem`
 ## Verify
 
 ```bash
-codamlings verify 02_http_get
+codam-labs verify 02_http_get
 ```

@@ -5,7 +5,7 @@
 #include <string>
 
 static std::string echo_url() {
-    const char* env = std::getenv("CODAMLINGS_ECHO_URL");
+    const char* env = std::getenv("CODAM_LABS_ECHO_URL");
     return env ? std::string(env) : "https://httpbin.org/post";
 }
 

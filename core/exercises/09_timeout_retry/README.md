@@ -49,5 +49,5 @@ The mock fails 2 times then responds with 200.
 ## Verify
 
 ```bash
-codamlings verify 09_timeout_retry
+codam-labs verify 09_timeout_retry
 ```

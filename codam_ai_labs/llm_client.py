@@ -8,7 +8,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-from codamlings.config import mistral_api_base, mistral_api_key, mistral_model
+from codam_ai_labs.config import mistral_api_base, mistral_api_key, mistral_model
 
 
 def _request(method: str, path: str, payload: dict | None = None, timeout: int = 60) -> dict:
@@ -61,4 +61,4 @@ def extract_json_object(text: str) -> dict:
 
 
 def is_mock_mode() -> bool:
-    return bool(os.environ.get("CODAMLINGS_MOCK"))
+    return bool(os.environ.get("CODAM_LABS_MOCK"))

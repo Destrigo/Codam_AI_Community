@@ -8,10 +8,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-from codamlings.checks import check_output, requires_mistral
-from codamlings.config import apply_mistral_env, require_mistral_key
-from codamlings.exercises import Exercise, exercises_for, mark_complete
-from codamlings.mock_server import mock_api_base, start_mock_server
+from codam_ai_labs.checks import check_output, requires_mistral
+from codam_ai_labs.config import apply_mistral_env, require_mistral_key
+from codam_ai_labs.exercises import Exercise, exercises_for, mark_complete
+from codam_ai_labs.mock_server import mock_api_base, start_mock_server
 
 MOCK_PORT = 0
 
@@ -34,7 +34,7 @@ def _build_cpp(exercise: Exercise) -> tuple[bool, str]:
     if not shutil.which("cmake"):
         return False, "cmake not found in PATH"
     env = os.environ.copy()
-    env.setdefault("FETCHCONTENT_BASE_DIR", str(Path(__file__).resolve().parent.parent / ".codamlings" / "deps"))
+    env.setdefault("FETCHCONTENT_BASE_DIR", str(Path(__file__).resolve().parent.parent / ".codam-ai-labs" / "deps"))
     configure = subprocess.run(
         ["cmake", "..", "-DCMAKE_BUILD_TYPE=Release"],
         cwd=build_dir, capture_output=True, text=True, env=env,
@@ -65,19 +65,19 @@ def _cpp_binary(exercise: Exercise) -> Path | None:
 
 def exercise_env(use_mock: bool, mock_base: str | None = None) -> dict[str, str]:
     env = os.environ.copy()
-    env.setdefault("APP_NAME", "codamlings")
+    env.setdefault("APP_NAME", "codam-ai-labs")
     env.setdefault("MISTRAL_MODEL", "mistral-small-latest")
     if use_mock and mock_base:
         apply_mistral_env(env, mock_base=mock_base)
         echo_root = mock_base.rsplit("/v1", 1)[0]
-        env["CODAMLINGS_ECHO_URL"] = f"{echo_root}/echo"
-        env["CODAMLINGS_MCP_BASE"] = f"{echo_root}/mcp"
-        env["CODAMLINGS_OLLAMA_BASE"] = echo_root
+        env["CODAM_LABS_ECHO_URL"] = f"{echo_root}/echo"
+        env["CODAM_LABS_MCP_BASE"] = f"{echo_root}/mcp"
+        env["CODAM_LABS_OLLAMA_BASE"] = echo_root
         env.setdefault("OLLAMA_MODEL", "llama3.2")
     else:
         apply_mistral_env(env, mock_base=None)
-        env.setdefault("CODAMLINGS_ECHO_URL", "https://httpbin.org/post")
-        env.setdefault("CODAMLINGS_OLLAMA_BASE", "http://localhost:11434")
+        env.setdefault("CODAM_LABS_ECHO_URL", "https://httpbin.org/post")
+        env.setdefault("CODAM_LABS_OLLAMA_BASE", "http://localhost:11434")
         env.setdefault("OLLAMA_MODEL", "llama3.2")
     return env
 

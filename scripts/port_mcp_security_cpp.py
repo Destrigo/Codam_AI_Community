@@ -22,7 +22,7 @@ static std::pair<std::string, std::string> parse_url(const std::string& url) {
 
 MCP_BASE = r'''
 static std::string mcp_base() {
-    const char* env = std::getenv("CODAMLINGS_MCP_BASE");
+    const char* env = std::getenv("CODAM_LABS_MCP_BASE");
     return env ? std::string(env) : "http://127.0.0.1:8765/mcp";
 }
 '''

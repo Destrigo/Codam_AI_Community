@@ -5,7 +5,7 @@
 #include <string>
 
 static std::string mcp_base() {
-    const char* env = std::getenv("CODAMLINGS_MCP_BASE");
+    const char* env = std::getenv("CODAM_LABS_MCP_BASE");
     return env ? std::string(env) : "http://127.0.0.1:8765/mcp";
 }
 

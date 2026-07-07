@@ -17,11 +17,11 @@ cd private/codam_AI_community
 pip install -e .
 
 # Python (default)
-codamlings list
-codamlings watch
+codam-labs list
+codam-labs watch
 
 # C++
-codamlings watch --lang cpp
+codam-labs watch --lang cpp
 ```
 
 ## Exercises
@@ -49,8 +49,8 @@ No extra system dependencies: HTTP/JSON libraries are header-only in `shared/cpp
 
 ## Mock vs live
 
-`codamlings verify` uses a **local mock server** for LLM exercises — works offline.
+`codam-labs verify` uses a **local mock server** for LLM exercises — works offline.
 
 All LLM exercises use **[Mistral](https://mistral.ai)** via its OpenAI-compatible API (`https://api.mistral.ai/v1`, model `mistral-small-latest`).
 
-`codamlings run --mock` runs against the mock. Without `--mock`, LLM exercises use `MISTRAL_API_BASE`, `MISTRAL_API_KEY`, and `MISTRAL_MODEL` from your environment.
+`codam-labs run --mock` runs against the mock. Without `--mock`, LLM exercises use `MISTRAL_API_BASE`, `MISTRAL_API_KEY`, and `MISTRAL_MODEL` from your environment.

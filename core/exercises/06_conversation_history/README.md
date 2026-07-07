@@ -47,5 +47,5 @@ With the mock, the output is: `HISTORY_OK:4` (4 total messages in the request).
 ## Verify
 
 ```bash
-codamlings verify 06_conversation_history
+codam-labs verify 06_conversation_history
 ```

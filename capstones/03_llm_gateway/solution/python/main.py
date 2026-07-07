@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-from codamlings.config import load_dotenv_if_present, require_mistral_key
+from codam_ai_labs.config import load_dotenv_if_present, require_mistral_key
 
 load_dotenv_if_present()
 

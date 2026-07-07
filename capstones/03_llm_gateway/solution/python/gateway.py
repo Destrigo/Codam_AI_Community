@@ -11,7 +11,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-from codamlings.config import mistral_api_base, mistral_api_key, mistral_model
+from codam_ai_labs.config import mistral_api_base, mistral_api_key, mistral_model
 
 INJECTION_PHRASES = ("ignore instructions",)
 

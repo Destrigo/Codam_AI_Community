@@ -306,7 +306,7 @@ if __name__=="__main__": main()
          "BATCH_OK"),
         ("embeddings", "05_embed_source", "Embedding source",
          "# Embedding Source\n\n## Theory\nSame API shape for cloud vs local embedding servers.\n\n## Assignment\nCall embeddings endpoint. Print `EMBED_SOURCE:mock`.",
-         "# Hint\nPrint mock when CODAMLINGS_MOCK=1 else api.",
+         "# Hint\nPrint mock when CODAM_LABS_MOCK=1 else api.",
          '''import json, os, urllib.request
 def main():
     base=os.environ.get("MISTRAL_API_BASE","https://api.mistral.ai/v1").rstrip("/")
@@ -314,7 +314,7 @@ def main():
     req=urllib.request.Request(f"{base}/embeddings",data=json.dumps(payload).encode(),method="POST")
     req.add_header("Content-Type","application/json")
     with urllib.request.urlopen(req,timeout=30) as r: r.read()
-    print("EMBED_SOURCE:mock" if os.environ.get("CODAMLINGS_MOCK") else "EMBED_SOURCE:api")
+    print("EMBED_SOURCE:mock" if os.environ.get("CODAM_LABS_MOCK") else "EMBED_SOURCE:api")
 if __name__=="__main__": main()
 ''', "EMBED_SOURCE:mock"),
 

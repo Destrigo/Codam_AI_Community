@@ -1,8 +1,8 @@
 # Peer Review — Ollama Chat
 
-- [ ] `codamlings run ollama/03_chat --lang python`
+- [ ] `codam-labs run ollama/03_chat --lang python`
 - [ ] Ollama running locally (`ollama serve`) or use `--mock` for offline verify
 - [ ] No API keys in source — configure `OLLAMA_*` in repo root `.env`
 
 ## Approve
-`codamlings review approve ollama/03_chat --lang python --reviewer YOUR_NAME`
+`codam-labs review approve ollama/03_chat --lang python --reviewer YOUR_NAME`

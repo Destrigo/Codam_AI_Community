@@ -3,9 +3,9 @@
 Use this checklist **instead of reading `solution/`**. Pair with a classmate.
 
 ## Before review
-- [ ] Your code runs: `codamlings run 01_env_vars --lang python`
-- [ ] You tried `codamlings hint` (not `--solution`)
-- [ ] Submit: `codamlings review submit 01_env_vars --lang python`
+- [ ] Your code runs: `codam-labs run 01_env_vars --lang python`
+- [ ] You tried `codam-labs hint` (not `--solution`)
+- [ ] Submit: `codam-labs review submit 01_env_vars --lang python`
 
 ## Reviewer checklist
 - [ ] Code runs without errors on reviewer's machine
@@ -22,7 +22,7 @@ Use this checklist **instead of reading `solution/`**. Pair with a classmate.
 ## Approve
 When all boxes are checked:
 ```bash
-codamlings review approve 01_env_vars --lang python --reviewer YOUR_NAME
+codam-labs review approve 01_env_vars --lang python --reviewer YOUR_NAME
 ```
 
-This marks the exercise complete (alternative to `codamlings verify`).
+This marks the exercise complete (alternative to `codam-labs verify`).

@@ -135,7 +135,7 @@ Reviewer UI shows: raw snippet | draft JSON | suggested fix.
 
 ---
 
-## Workshop exercise (Codamlings extension)
+## Workshop exercise (Codam AI Labs extension)
 
 **Build in 1 day:**
 

@@ -1,4 +1,4 @@
-"""Shared Mistral API configuration for codamlings."""
+"""Shared Mistral API configuration for codam_ai_labs."""
 
 from __future__ import annotations
 
@@ -25,10 +25,10 @@ def apply_mistral_env(env: dict[str, str], mock_base: str | None = None, mock_ke
     if mock_base:
         env["MISTRAL_API_BASE"] = mock_base
         env["MISTRAL_API_KEY"] = mock_key
-        env["CODAMLINGS_MOCK"] = "1"
+        env["CODAM_LABS_MOCK"] = "1"
     else:
         env.setdefault("MISTRAL_API_BASE", MISTRAL_API_BASE_DEFAULT)
-        env.pop("CODAMLINGS_MOCK", None)
+        env.pop("CODAM_LABS_MOCK", None)
 
 
 def require_mistral_key() -> None:

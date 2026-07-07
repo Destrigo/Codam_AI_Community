@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CORE_DIR = ROOT / "core" / "exercises"
 MODULES_DIR = ROOT / "modules"
-PROGRESS_FILE = ROOT / ".codamlings" / "progress.json"
+PROGRESS_FILE = ROOT / ".codam-ai-labs" / "progress.json"
 
 
 @dataclass(frozen=True)

@@ -18,9 +18,9 @@ Complete `core/` first, then pick any module independently.
 | `ollama` | 6 | Local models via Ollama HTTP API |
 
 ```bash
-codamlings list --module ollama
-codamlings verify all --module security
-codamlings watch --module agents
+codam-labs list --module ollama
+codam-labs verify all --module security
+codam-labs watch --module agents
 ```
 
 **Total: 10 core + 68 module = 78 exercises**

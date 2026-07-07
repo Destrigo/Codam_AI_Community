@@ -17,11 +17,11 @@ STUB_CPP = '#include <iostream>\n\nint main() {\n    // TODO: see README.md\n   
 
 PEER = """# Peer Review — {title}
 
-- [ ] `codamlings run {slug} --lang python`
+- [ ] `codam-labs run {slug} --lang python`
 - [ ] No API keys in source — use repo root `.env`
 
 ## Approve
-`codamlings review approve {slug} --lang python --reviewer YOUR_NAME`
+`codam-labs review approve {slug} --lang python --reviewer YOUR_NAME`
 """
 
 
@@ -87,11 +87,11 @@ Clients discover tools via HTTP `GET {MCP_BASE}/tools`.
 
 ## Assignment
 Call the MCP mock endpoint. Print `TOOLS_OK:` + number of tools.""",
-    "Use `CODAMLINGS_MCP_BASE` env (set in verify). `urllib.request.urlopen`.",
+    "Use `CODAM_LABS_MCP_BASE` env (set in verify). `urllib.request.urlopen`.",
     """import json, os, urllib.request
 
 def main() -> None:
-    base = os.environ.get("CODAMLINGS_MCP_BASE", "http://127.0.0.1:8765/mcp").rstrip("/")
+    base = os.environ.get("CODAM_LABS_MCP_BASE", "http://127.0.0.1:8765/mcp").rstrip("/")
     with urllib.request.urlopen(f"{base}/tools", timeout=10) as r:
         data = json.loads(r.read())
     print(f"TOOLS_OK:{len(data['tools'])}")
@@ -116,7 +116,7 @@ Call tool `search` with `{query: "docs"}`. Print response containing `MCP_CALL_O
     """import json, os, urllib.request
 
 def main() -> None:
-    base = os.environ.get("CODAMLINGS_MCP_BASE", "http://127.0.0.1:8765/mcp").rstrip("/")
+    base = os.environ.get("CODAM_LABS_MCP_BASE", "http://127.0.0.1:8765/mcp").rstrip("/")
     body = json.dumps({"name": "search", "arguments": {"query": "docs"}}).encode()
     req = urllib.request.Request(f"{base}/call", data=body, method="POST")
     req.add_header("Content-Type", "application/json")
@@ -144,7 +144,7 @@ Read resource `policy`. Print line containing `RESOURCE_OK`.""",
     """import json, os, urllib.request
 
 def main() -> None:
-    base = os.environ.get("CODAMLINGS_MCP_BASE", "http://127.0.0.1:8765/mcp").rstrip("/")
+    base = os.environ.get("CODAM_LABS_MCP_BASE", "http://127.0.0.1:8765/mcp").rstrip("/")
     with urllib.request.urlopen(f"{base}/resources/policy", timeout=10) as r:
         data = json.loads(r.read())
     print(data["content"])
@@ -169,7 +169,7 @@ Initialize session. Print `SESSION_OK:` + session id from response.""",
     """import json, os, urllib.request
 
 def main() -> None:
-    base = os.environ.get("CODAMLINGS_MCP_BASE", "http://127.0.0.1:8765/mcp").rstrip("/")
+    base = os.environ.get("CODAM_LABS_MCP_BASE", "http://127.0.0.1:8765/mcp").rstrip("/")
     req = urllib.request.Request(f"{base}/initialize", data=b"{}", method="POST")
     req.add_header("Content-Type", "application/json")
     with urllib.request.urlopen(req, timeout=10) as r:
