@@ -51,9 +51,16 @@ def find_case(name: str | None) -> BusinessCase | None:
     return None
 
 
-def run_case(case: BusinessCase, args: list[str]) -> int:
+def run_case(case: BusinessCase, args: list[str], *, use_mock: bool = False) -> int:
     entry = case.pipeline
     if not entry.exists():
         print(f"Not found: {entry}", file=sys.stderr)
         return 1
-    return subprocess.run([sys.executable, str(entry), *args], cwd=case.path).returncode
+    from codam_ai_labs.runtime import subprocess_env
+
+    with subprocess_env(use_mock=use_mock) as env:
+        return subprocess.run(
+            [sys.executable, str(entry), *args],
+            cwd=case.path,
+            env=env,
+        ).returncode

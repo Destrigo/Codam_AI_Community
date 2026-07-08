@@ -34,7 +34,7 @@ Codam AI Labs runs on **Windows, macOS, and Linux**. No administrator privileges
 | [Ollama](https://ollama.com/download) | `modules/ollama` | `ollama serve` + `ollama pull llama3.2` (and `nomic-embed-text` for embeddings) |
 | Internet | Live HTTP / API calls | `jsonplaceholder.typicode.com`, `httpbin.org`, cloud APIs |
 
-**Offline / CI:** `codam-labs verify --mock` starts a local mock server on `127.0.0.1` — no API keys, no Ollama install, no internet (after the first C++ build, which may download header-only deps via CMake).
+**Offline / CI:** `codam-labs --mock verify` starts a local mock server on `127.0.0.1` — no API keys, no Ollama install, no internet (after the first C++ build, which may download header-only deps via CMake).
 
 **Environment constraints:** corporate firewalls or proxies may block cloud APIs or GitHub downloads. If live verify fails but `--mock` passes, check network access first.
 
@@ -44,10 +44,22 @@ Official CI runs on **Ubuntu** (GitHub Actions). Student machines on Windows or 
 
 ```bash
 pip install -e .
-codam-labs          # show next exercise
-codam-labs watch    # verify loop on save
-codam-labs list     # progress
-codam-labs verify all
+cp .env.example .env   # add your MISTRAL_API_KEY
+
+# Linux / macOS
+codam-labs list
+codam-labs --mock --lang python verify 01_env_vars
+
+# Windows (if `codam-labs` is not on PATH)
+py -m codam_ai_labs list
+py -m codam_ai_labs --mock --lang python verify 01_env_vars
+```
+
+**CLI flag order:** global options (`--mock`, `--lang`, `--module`) go **before** the subcommand:
+
+```bash
+codam-labs --mock verify ollama/03_chat        # ✅
+codam-labs verify ollama/03_chat --mock        # ❌
 ```
 
 ## Commands
@@ -56,18 +68,22 @@ codam-labs verify all
 |---------|-------------|
 | `codam-labs` | Next incomplete exercise + README |
 | `codam-labs list` | List exercises and status |
-| `codam-labs run [slug]` | Run an exercise (live Mistral by default) |
-| `codam-labs verify [slug\|all]` | Verify output (live Mistral by default) |
-| `codam-labs verify all --module rag` | Verify a whole module |
-| `codam-labs list --module all` | Progress across modules |
-| `codam-labs hint [slug]` | Peer review rubric + hint (not solution) |
-| `codam-labs hint [slug] --solution` | Instructor solution only |
+| `codam-labs --module <name> list` | List one module |
+| `codam-labs --lang python run <slug>` | Run an exercise (live Mistral by default) |
+| `codam-labs --mock verify <slug>` | Verify offline (no API key) |
+| `codam-labs --mock verify all` | Verify every exercise offline |
+| `codam-labs --mock --module rag verify all` | Verify a whole module offline |
+| `codam-labs hint <slug>` | Peer review rubric + hint (not solution) |
+| `codam-labs hint <slug> --solution` | Instructor solution only |
 | `codam-labs review rubric [slug]` | Show peer review checklist |
 | `codam-labs review submit [slug]` | Submit code for peer review |
 | `codam-labs review approve [slug]` | Approve peer review (marks complete) |
-| `codam-labs watch` | Rustlings-style mode |
-| `--lang python\|cpp` | Language (default: python) |
-| `--mock` | Offline mock server (CI / no API key) |
+| `codam-labs watch` | Rustlings-style verify on save |
+| `codam-labs capstone list` | List capstone projects |
+| `codam-labs --mock capstone run <name> -- <args>` | Run capstone offline |
+| `codam-labs --mock business run <name>` | Run business case offline |
+| `--lang python\|cpp` | Language (default: python) — place before subcommand |
+| `--mock` | Offline mock server (CI / no API key) — place before subcommand |
 
 ## Configuration
 
@@ -110,3 +126,9 @@ Finish `core/`, then pick the stand-alone modules you care about.
 | Business cases | [`business_cases/`](business_cases/README.md) | Retail catalog, AP invoices, insurance FNOL |
 
 Capstones require completing relevant modules. Business cases are workshop-style scenarios with sample data and canonical JSON schemas.
+
+```bash
+codam-labs capstone list
+codam-labs --mock capstone run 03_llm_gateway -- complete --prompt "Reply OK"
+codam-labs --mock business run 01_retail_catalog_harmonization
+```

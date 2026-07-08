@@ -36,7 +36,7 @@ def _print_list(lang: str, module: str | None) -> None:
             exs = exercises_for(name)
             done = sum(1 for e in exs if is_complete(e.slug, lang))
             print(f"  {name}: {done}/{len(exs)}")
-        print("\nUse: codam-labs list --module rag")
+        print("\nUse: codam-labs --module rag list")
         return
     if module != "core":
         print(f"\n{module} exercises:\n")
@@ -155,11 +155,11 @@ def main(argv: list[str] | None = None) -> None:
             if readme.exists():
                 print(readme.read_text(encoding="utf-8"))
             print("\nUseful commands:")
-            print(f"  codam-labs run {exercise.path.name} --lang {lang}")
-            print(f"  codam-labs verify {exercise.path.name} --lang {lang}")
+            print(f"  codam-labs --lang {lang} run {exercise.path.name}")
+            print(f"  codam-labs --lang {lang} verify {exercise.path.name}")
             print(f"  codam-labs review rubric {exercise.path.name}")
         else:
-            print("Core complete! Try: codam-labs list --module rag")
+            print("Core complete! Try: codam-labs --module rag list")
         return
 
     if args.command == "list":
@@ -240,7 +240,7 @@ def main(argv: list[str] | None = None) -> None:
             return
         if args.cap_cmd == "run":
             extra = [a for a in getattr(args, "args", []) if a != "--"]
-            sys.exit(run_capstone(cap, extra, use_solution=True))
+            sys.exit(run_capstone(cap, extra, use_solution=True, use_mock=use_mock))
         cap_p.print_help()
         return
 
@@ -256,7 +256,7 @@ def main(argv: list[str] | None = None) -> None:
             sys.exit(1)
         if args.bus_cmd == "run":
             extra = [a for a in getattr(args, "args", []) if a != "--"]
-            sys.exit(run_case(case, extra))
+            sys.exit(run_case(case, extra, use_mock=use_mock))
         bus_p.print_help()
         return
 

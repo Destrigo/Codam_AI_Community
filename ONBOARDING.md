@@ -41,14 +41,28 @@ pip install -e .
 
 This installs the `codam-labs` command.
 
-**If `codam-labs` is not found** (common on Windows if the Scripts folder isn't on your PATH),
-use the module form everywhere instead:
+**Windows:** if `codam-labs` is not found (Scripts folder not on PATH), use the launcher:
 
 ```bash
-python -m codam_ai_labs list
+py -m codam_ai_labs list
 ```
 
-Everywhere this guide says `codam-labs ...`, `python -m codam_ai_labs ...` works too.
+On Windows, prefer `py` over `python` if the Microsoft Store alias is enabled.
+
+Everywhere this guide says `codam-labs ...`, prefix with `py -m codam_ai_labs` on Windows when needed.
+
+### 2.1b CLI flag order (important)
+
+Global flags must come **before** the subcommand:
+
+```bash
+codam-labs --mock --lang python verify 01_env_vars     # ✅ correct
+codam-labs verify 01_env_vars --mock --lang python     # ❌ wrong
+codam-labs --module ollama list                        # ✅ correct
+codam-labs list --module ollama                        # ❌ wrong
+```
+
+Flags: `--mock` (offline), `--lang python|cpp`, `--module <name>`.
 
 ### 2.2 Configure your key (one `.env` for everything)
 
@@ -80,7 +94,7 @@ OLLAMA_MODEL=llama3.2
 ### 2.3 Smoke test
 
 ```bash
-codam-labs verify 01_env_vars --mock
+codam-labs --mock verify 01_env_vars
 ```
 
 You should see `PASS 01_env_vars`. If so, you're ready.
@@ -94,8 +108,8 @@ The core workflow is: **see the task → edit code → verify → repeat.**
 ```bash
 codam-labs                 # shows your next incomplete exercise + its README
 codam-labs list            # your progress across everything
-codam-labs run <slug>      # run your current code and see the output
-codam-labs verify <slug>   # check your output against the exercise rubric
+codam-labs --lang python run <slug>      # run your current code and see the output
+codam-labs --mock --lang python verify <slug>   # check output (offline)
 ```
 
 The fastest way to work is **watch mode** — it re-runs verify every time you save:
@@ -129,7 +143,7 @@ You only edit the file under `python/` or `cpp/`. Leave `solution/` alone until 
 
 | | Live (default) | `--mock` |
 |---|----------------|----------|
-| Command | `codam-labs verify 04_llm_first_call` | `codam-labs verify 04_llm_first_call --mock` |
+| Command | `codam-labs verify 04_llm_first_call` | `codam-labs --mock verify 04_llm_first_call` |
 | Uses | Your real Mistral/Ollama | A local fake server on `127.0.0.1` |
 | Needs a key? | Yes | No |
 | Needs internet? | Yes | No |
@@ -185,12 +199,12 @@ no hardcoded keys, readable code).
 
 ## 7. Choosing a language
 
-Add `--lang cpp` to any command to work in C++ instead of Python:
+Add `--lang cpp` before the subcommand to work in C++ instead of Python:
 
 ```bash
-codam-labs run <slug> --lang cpp
-codam-labs verify <slug> --lang cpp
-codam-labs watch --lang cpp
+codam-labs --lang cpp run <slug>
+codam-labs --lang cpp verify <slug>
+codam-labs --lang cpp watch
 ```
 
 Both tracks share the exact same READMEs, checks, and mock/live behavior. The C++ track
@@ -218,8 +232,8 @@ core (10)
 Browse modules any time:
 
 ```bash
-codam-labs list --module all
-codam-labs list --module rag
+codam-labs --module all list
+codam-labs --module rag list
 ```
 
 ---
@@ -240,8 +254,8 @@ ollama pull nomic-embed-text   # only for the embeddings exercise
 Then:
 
 ```bash
-codam-labs verify all --module ollama          # live, against your local Ollama
-codam-labs verify all --module ollama --mock   # offline, no Ollama needed
+codam-labs --module ollama verify all          # live, against your local Ollama
+codam-labs --mock --module ollama verify all   # offline, no Ollama needed
 ```
 
 ---
@@ -252,10 +266,18 @@ Once you've cleared the relevant modules:
 
 ```bash
 codam-labs capstone list
-codam-labs capstone run <name> -- <args>       # e.g. the RAG assistant, ops agent, gateway
+codam-labs --mock capstone run <name> -- <args>       # offline (no API key)
+codam-labs capstone run <name> -- <args>              # live (needs .env key)
 
 codam-labs business list
-codam-labs business run <name>                 # workshop-style ingestion pipelines
+codam-labs --mock business run <name>                 # offline
+codam-labs business run <name>                        # live
+```
+
+Example:
+
+```bash
+codam-labs --mock capstone run 03_llm_gateway -- complete --prompt "Reply OK"
 ```
 
 These are larger, integrated projects (mini-RAG, mini-agent, LLM gateway, and real-world
@@ -269,19 +291,21 @@ data-ingestion scenarios). Reference solutions are provided in Python.
 |---------|--------------|
 | `codam-labs` | Show next incomplete exercise + README |
 | `codam-labs list` | Progress overview |
-| `codam-labs list --module <name>` | List a module's exercises |
+| `codam-labs --module <name> list` | List a module's exercises |
 | `codam-labs run <slug>` | Run your code |
 | `codam-labs verify <slug>` | Verify against rubric (live) |
-| `codam-labs verify <slug> --mock` | Verify offline |
-| `codam-labs verify all --module <name>` | Verify a whole module |
+| `codam-labs --mock verify <slug>` | Verify offline |
+| `codam-labs --module <name> verify all` | Verify a whole module |
 | `codam-labs watch` | Re-verify on every save |
 | `codam-labs hint <slug>` | Show hints + peer-review checklist |
 | `codam-labs hint <slug> --solution` | Show the reference solution |
 | `codam-labs review submit/rubric/approve <slug>` | Peer-review workflow |
 | `codam-labs capstone list / run` | Capstone projects |
+| `codam-labs --mock capstone run <name>` | Capstone offline |
 | `codam-labs business list / run` | Business-case pipelines |
-| `--lang cpp` | Switch any command to the C++ track |
-| `--mock` | Run offline against the local mock server |
+| `codam-labs --mock business run <name>` | Business case offline |
+| `--lang cpp` | Switch to the C++ track (place before subcommand) |
+| `--mock` | Run offline against the local mock server (place before subcommand) |
 
 ---
 
@@ -289,8 +313,8 @@ data-ingestion scenarios). Reference solutions are provided in Python.
 
 | Symptom | Fix |
 |---------|-----|
-| `codam-labs: command not found` | Use `python -m codam_ai_labs ...`, or add your Python Scripts dir to PATH |
-| `MISTRAL_API_KEY is required` | Set your key in `.env`, or add `--mock` to run offline |
+| `codam-labs: command not found` | Use `py -m codam_ai_labs ...` (Windows) or `python -m codam_ai_labs ...`, or add Scripts to PATH |
+| `MISTRAL_API_KEY is required` | Set your key in `.env`, or put `--mock` before the subcommand |
 | Live verify fails but `--mock` passes | Network/firewall/proxy issue, or invalid key — check connectivity first |
 | C++ build fails: `cmake not found` | Install CMake 3.16+ and a C++17 compiler |
 | First C++ build is slow | It's downloading header-only deps once; later builds are fast |

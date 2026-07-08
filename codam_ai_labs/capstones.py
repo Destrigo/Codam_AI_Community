@@ -41,9 +41,16 @@ def find_capstone(name: str | None) -> Capstone | None:
     return None
 
 
-def run_capstone(cap: Capstone, args: list[str], *, use_solution: bool = True) -> int:
+def run_capstone(cap: Capstone, args: list[str], *, use_solution: bool = True, use_mock: bool = False) -> int:
     entry = cap.solution_main if use_solution else cap.path / "python" / "main.py"
     if not entry.exists():
         print(f"Not found: {entry}", file=sys.stderr)
         return 1
-    return subprocess.run([sys.executable, str(entry), *args], cwd=cap.path).returncode
+    from codam_ai_labs.runtime import subprocess_env
+
+    with subprocess_env(use_mock=use_mock) as env:
+        return subprocess.run(
+            [sys.executable, str(entry), *args],
+            cwd=cap.path,
+            env=env,
+        ).returncode
