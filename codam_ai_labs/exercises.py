@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parent.parent
 CORE_DIR = ROOT / "core" / "exercises"
 MODULES_DIR = ROOT / "modules"
 PROGRESS_FILE = ROOT / ".codam-ai-labs" / "progress.json"
+SESSION_FILE = ROOT / ".codam-ai-labs" / "session.json"
+TRACK_LANGS = ("python", "cpp")
 
 
 @dataclass(frozen=True)
@@ -116,9 +118,150 @@ def mark_complete(slug: str, lang: str, via: str = "verify") -> None:
     save_progress(data)
 
 
+def exercise_pool(module: str | None = None) -> list[Exercise]:
+    """Ordered exercise list for the interactive session."""
+    if module in (None, "all"):
+        return ALL_EXERCISES
+    return exercises_for(module)
+
+
+def unmark_complete(slug: str, lang: str) -> None:
+    data = load_progress()
+    completed = data.setdefault("completed", {})
+    langs = [value for value in completed.get(slug, []) if value != lang]
+    if langs:
+        completed[slug] = langs
+    else:
+        completed.pop(slug, None)
+    peer = data.setdefault("peer_reviewed", {})
+    plangs = [value for value in peer.get(slug, []) if value != lang]
+    if plangs:
+        peer[slug] = plangs
+    else:
+        peer.pop(slug, None)
+    save_progress(data)
+
+
+def load_session_state() -> dict:
+    if not SESSION_FILE.exists():
+        return {}
+    return json.loads(SESSION_FILE.read_text(encoding="utf-8"))
+
+
+def save_session_state(
+    *,
+    index: int,
+    slug: str,
+    lang: str,
+    module: str | None,
+    use_mock: bool = False,
+    both_langs: bool = False,
+) -> None:
+    SESSION_FILE.parent.mkdir(parents=True, exist_ok=True)
+    SESSION_FILE.write_text(
+        json.dumps(
+            {
+                "index": index,
+                "slug": slug,
+                "lang": lang,
+                "module": module or "all",
+                "use_mock": use_mock,
+                "both_langs": both_langs,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+
+def load_preferences() -> dict:
+    data = load_session_state()
+    return {
+        "lang": data.get("lang", "python"),
+        "module": data.get("module", "all"),
+        "use_mock": bool(data.get("use_mock", False)),
+        "both_langs": bool(data.get("both_langs", False)),
+        "slug": data.get("slug"),
+        "index": int(data.get("index", 0)),
+    }
+
+
+def save_preferences(
+    *,
+    lang: str,
+    module: str | None,
+    use_mock: bool,
+    both_langs: bool = False,
+) -> None:
+    existing = load_session_state()
+    pool = exercise_pool(module if module != "all" else "all")
+    index = int(existing.get("index", 0))
+    slug = existing.get("slug", pool[0].slug if pool else "")
+    if slug and pool:
+        index = resolve_session_index(pool, {"slug": slug, "index": index})
+    save_session_state(
+        index=index,
+        slug=slug or (pool[index].slug if pool else ""),
+        lang=lang,
+        module=module,
+        use_mock=use_mock,
+        both_langs=both_langs,
+    )
+
+
+def resolve_session_index(pool: list[Exercise], saved: dict) -> int:
+    slug = saved.get("slug")
+    if slug:
+        for idx, exercise in enumerate(pool):
+            if exercise.slug == slug:
+                return idx
+    index = int(saved.get("index", 0))
+    if not pool:
+        return 0
+    return max(0, min(index, len(pool) - 1))
+
+
+def reset_progress() -> None:
+    """Clear local exercise completion state (student progress only)."""
+    if PROGRESS_FILE.exists():
+        PROGRESS_FILE.unlink()
+    if SESSION_FILE.exists():
+        SESSION_FILE.unlink()
+
+
 def is_complete(slug: str, lang: str) -> bool:
     data = load_progress()
     return lang in data.get("completed", {}).get(slug, [])
+
+
+def is_exercise_complete(slug: str, lang: str, *, both_langs: bool = False) -> bool:
+    """True when the exercise is done for the active track (one or both languages)."""
+    if both_langs:
+        return all(is_complete(slug, track) for track in TRACK_LANGS)
+    return is_complete(slug, lang)
+
+
+def track_done_count(
+    pool: list[Exercise],
+    lang: str,
+    *,
+    both_langs: bool = False,
+) -> int:
+    return sum(
+        1 for ex in pool if is_exercise_complete(ex.slug, lang, both_langs=both_langs)
+    )
+
+
+def exercise_status_label(slug: str, lang: str, *, both_langs: bool = False) -> str:
+    if not both_langs:
+        return "done" if is_complete(slug, lang) else "todo"
+    py = is_complete(slug, "python")
+    cpp = is_complete(slug, "cpp")
+    if py and cpp:
+        return "done"
+    if py or cpp:
+        return "partial"
+    return "todo"
 
 
 def find_exercise(query: str | None, module: str | None = None) -> Exercise | None:
@@ -145,8 +288,13 @@ def find_exercise(query: str | None, module: str | None = None) -> Exercise | No
     return None
 
 
-def next_incomplete(lang: str = "python", module: str | None = None) -> Exercise | None:
+def next_incomplete(
+    lang: str = "python",
+    module: str | None = None,
+    *,
+    both_langs: bool = False,
+) -> Exercise | None:
     for ex in exercises_for(module):
-        if not is_complete(ex.slug, lang):
+        if not is_exercise_complete(ex.slug, lang, both_langs=both_langs):
             return ex
     return None

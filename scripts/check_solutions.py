@@ -38,7 +38,7 @@ def main() -> int:
                 continue
             backups.append((dst, dst.read_text(encoding="utf-8") if dst.exists() else None))
             dst.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
-            if verify_exercise(exercise, lang, use_mock=args.mock):
+            if verify_exercise(exercise, lang, use_mock=args.mock, record_progress=False):
                 passed += 1
     finally:
         for dst, original in backups:

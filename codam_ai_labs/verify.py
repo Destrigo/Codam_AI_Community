@@ -92,33 +92,98 @@ def _prepare_env(exercise: Exercise, use_mock: bool) -> tuple[dict[str, str], ob
     return exercise_env(False), None
 
 
-def run_exercise(exercise: Exercise, lang: str, use_mock: bool = False) -> int:
+def run_exercise(exercise: Exercise, lang: str, use_mock: bool = False, *, capture: bool = False) -> int | tuple[int, str, str]:
     env, server = _prepare_env(exercise, use_mock)
     try:
         if lang == "python":
             entry = _python_entry(exercise)
             if not entry.exists():
-                print(f"File not found: {entry}")
+                message = f"File not found: {entry}"
+                if capture:
+                    return 1, "", message
+                print(message)
                 return 1
+            if capture:
+                proc = _run_process([sys.executable, str(entry)], entry.parent, env)
+                return proc.returncode, proc.stdout or "", proc.stderr or ""
             return subprocess.run([sys.executable, str(entry)], env=env).returncode
         if lang == "cpp":
             ok, err = _build_cpp(exercise)
             if not ok:
+                if capture:
+                    return 1, "", err
                 print(err)
                 return 1
             binary = _cpp_binary(exercise)
             if not binary:
-                print("C++ executable not found after build.")
+                message = "C++ executable not found after build."
+                if capture:
+                    return 1, "", message
+                print(message)
                 return 1
+            if capture:
+                proc = _run_process([str(binary)], binary.parent, env)
+                return proc.returncode, proc.stdout or "", proc.stderr or ""
             return subprocess.run([str(binary)], env=env).returncode
-        print(f"Unsupported language: {lang}")
+        message = f"Unsupported language: {lang}"
+        if capture:
+            return 1, "", message
+        print(message)
         return 1
     finally:
         if server:
             server.shutdown()
 
 
-def verify_exercise(exercise: Exercise, lang: str, use_mock: bool = False) -> bool:
+def format_run_summary(
+    exercise: Exercise,
+    *,
+    returncode: int,
+    stdout: str,
+    stderr: str,
+    use_mock: bool,
+) -> list[str]:
+    """Human-readable run report (does not mark exercises complete)."""
+    lines: list[str] = []
+    out = stdout or ""
+    err = stderr or ""
+    out_stripped = out.strip()
+    err_stripped = err.strip()
+
+    if returncode != 0:
+        lines.append(f"$ run [crashed - exit {returncode}]")
+        if err_stripped:
+            lines.append("stderr:")
+            lines.extend(err_stripped.splitlines()[:12])
+        elif out_stripped:
+            lines.append("stdout:")
+            lines.extend(out_stripped.splitlines()[:12])
+        lines.append("fix the error, then press v to verify")
+        return lines
+
+    if not out_stripped and not err_stripped:
+        lines.append("$ run [exit 0 - ran successfully but printed nothing]")
+        lines.append("(stub with only `pass` does this — your code is not finished yet)")
+    elif not out_stripped and err_stripped:
+        lines.append("$ run [exit 0 - stderr only, no stdout]")
+    else:
+        nlines = len(out_stripped.splitlines())
+        lines.append(f"$ run [exit 0 - {nlines} stdout line(s)]")
+
+    rubric_ok, rubric_msg = check_output(exercise.slug, out, err, use_mock=use_mock)
+    if rubric_ok:
+        lines.append("rubric preview: output matches - press v to confirm PASS")
+    else:
+        headline = rubric_msg.split("\n", 1)[0]
+        lines.append(f"rubric preview: not passing yet - {headline}")
+        lines.append("press v for full verify details")
+
+    return lines
+
+
+def verify_exercise(
+    exercise: Exercise, lang: str, use_mock: bool = False, *, record_progress: bool = True
+) -> bool:
     env, server = _prepare_env(exercise, use_mock)
     try:
         if lang == "python":
@@ -143,7 +208,8 @@ def verify_exercise(exercise: Exercise, lang: str, use_mock: bool = False) -> bo
 
         ok, msg = check_output(exercise.slug, proc.stdout, proc.stderr, use_mock=use_mock)
         if ok:
-            mark_complete(exercise.slug, lang, via="verify")
+            if record_progress:
+                mark_complete(exercise.slug, lang, via="verify")
             mode = "mock" if use_mock else "live"
             print(f"PASS {exercise.slug} [{lang}] ({mode})")
             return True

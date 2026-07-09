@@ -103,23 +103,51 @@ You should see `PASS 01_env_vars`. If so, you're ready.
 
 ## 3. Your daily loop
 
-The core workflow is: **see the task → edit code → verify → repeat.**
+Launch the **main menu** (default when you run `codam-labs`):
 
 ```bash
-codam-labs                 # shows your next incomplete exercise + its README
-codam-labs list            # your progress across everything
-codam-labs --lang python run <slug>      # run your current code and see the output
-codam-labs --mock --lang python verify <slug>   # check output (offline)
+codam-labs                    # interactive start menu
+py -m codam_ai_labs             # Windows
 ```
 
-The fastest way to work is **watch mode** — it re-runs verify every time you save:
+From the menu you can:
 
-```bash
-codam-labs watch
-```
+| Key | Action |
+|-----|--------|
+| `1` / Enter | Resume watch session at your last exercise |
+| `2` | Pick any exercise from the list |
+| `3` | Switch language (python ↔ cpp) |
+| `4` | Progress by module |
+| `5` | Learning roadmap |
+| `6` | Toggle live / mock API mode |
+| `7` | Capstones & business cases info |
+| `8` | Reset all progress |
+| `9` | Watch session key reference |
+| `q` | Quit |
 
-Leave it running in one terminal, edit `python/main.py` in your editor, and watch it
-turn green when you get it right. When it passes, it automatically moves to the next one.
+Inside the watch session, press **`m`** to return to this menu.
+
+The fastest way to work is **watch mode** — it auto-verifies when you save your file:
+
+**Session keys:**
+
+| Key | Action |
+|-----|--------|
+| `n` | Next exercise (when current is done) |
+| `p` | Previous exercise |
+| `s` | Skip forward |
+| `r` | Run your code |
+| `v` | Verify |
+| `h` | Open hint + peer-review in a new terminal window |
+| `o` | Open README in a new terminal window |
+| `m` | Back to main menu |
+| `l` | Browse all exercises (`j`/`k`, Enter to open) |
+| `x` | Reset progress on current exercise |
+| `?` | Help |
+| `q` | Quit session |
+
+Leave the session running in one terminal, edit `python/main.py` in your editor, and save —
+verify runs automatically. Press `n` when you pass to move on.
 
 ### Where do I write my code?
 
@@ -296,7 +324,8 @@ data-ingestion scenarios). Reference solutions are provided in Python.
 | `codam-labs verify <slug>` | Verify against rubric (live) |
 | `codam-labs --mock verify <slug>` | Verify offline |
 | `codam-labs --module <name> verify all` | Verify a whole module |
-| `codam-labs watch` | Re-verify on every save |
+| `codam-labs watch` | Interactive session — verify on save, n/p navigation |
+| `codam-labs reset` | Clear local progress and start over |
 | `codam-labs hint <slug>` | Show hints + peer-review checklist |
 | `codam-labs hint <slug> --solution` | Show the reference solution |
 | `codam-labs review submit/rubric/approve <slug>` | Peer-review workflow |
@@ -320,6 +349,7 @@ data-ingestion scenarios). Reference solutions are provided in Python.
 | First C++ build is slow | It's downloading header-only deps once; later builds are fast |
 | Ollama exercise fails (live) | Make sure `ollama serve` is running and the model is pulled, or use `--mock` |
 | Verify says "missing expected output" | Re-read the README — it lists the exact string your program must print |
+| Everything shows `[done]` but you haven't finished | A dev/CI script may have marked progress — run `codam-labs reset` |
 
 ---
 

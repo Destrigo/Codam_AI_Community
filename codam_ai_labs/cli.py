@@ -13,13 +13,18 @@ from codam_ai_labs.exercises import (
     MODULE_NAMES,
     find_exercise,
     is_complete,
+    load_preferences,
     next_incomplete,
     exercises_for,
+    reset_progress,
 )
 from codam_ai_labs.review import approve_review, list_pending, show_rubric, submit_for_review
 from codam_ai_labs.capstones import CAPSTONES, find_capstone, run_capstone
 from codam_ai_labs.business_cases import CASES, find_case, run_case
-from codam_ai_labs.verify import run_exercise, verify_all, verify_exercise
+from codam_ai_labs.menu import run_menu
+from codam_ai_labs.terminal_viewer import build_hint_document, open_hint_in_new_terminal
+from codam_ai_labs.session import run_session
+from codam_ai_labs.verify import format_run_summary, run_exercise, verify_all, verify_exercise
 
 load_dotenv_if_present()
 
@@ -45,52 +50,25 @@ def _print_list(lang: str, module: str | None) -> None:
             print(f"  [{status}] {ex.id} {ex.slug} — {ex.title}")
 
 
-def _show_hint(exercise_path: Path, show_solution: bool = False) -> None:
+def _show_hint(exercise_path: Path, slug: str, *, show_solution: bool = False) -> None:
     if show_solution:
         sol_py = exercise_path / "solution" / "python" / "main.py"
         if sol_py.exists():
             print("=== Instructor solution (do not share) ===\n")
             print(sol_py.read_text(encoding="utf-8"))
             return
-    peer = exercise_path / "peer_review.md"
-    if peer.exists():
-        print(peer.read_text(encoding="utf-8"))
-        print("\n---\n")
-    hint = exercise_path / "hint.md"
-    if hint.exists():
-        print(hint.read_text(encoding="utf-8"))
-    elif not peer.exists():
-        readme = exercise_path / "README.md"
-        if readme.exists():
-            print(readme.read_text(encoding="utf-8"))
+    if sys.stdout.isatty() and open_hint_in_new_terminal(exercise_path, slug=slug):
+        print(f"Opened hint + peer review in new terminal: {slug}")
+        return
+    document = build_hint_document(exercise_path)
+    if document:
+        print(document)
+    else:
+        print("No hint available.")
 
 
-def _watch(lang: str, module: str | None, use_mock: bool) -> int:
-    exercise = next_incomplete(lang, module=module)
-    if not exercise:
-        print("All exercises complete for this track!")
-        return 0
-    target = exercise.path / lang / ("main.py" if lang == "python" else "main.cpp")
-    print(f"Watching {target.name} — save to re-run verify.")
-    print(f"Current: {exercise.slug}\n")
-    last_mtime = target.stat().st_mtime if target.exists() else 0
-    while True:
-        if target.exists():
-            mtime = target.stat().st_mtime
-            if mtime != last_mtime:
-                last_mtime = mtime
-                print(f"\n--- verify {exercise.slug} [{lang}] ---")
-                if verify_exercise(exercise, lang, use_mock=use_mock):
-                    nxt = next_incomplete(lang, module=module)
-                    if nxt:
-                        exercise = nxt
-                        target = exercise.path / lang / ("main.py" if lang == "python" else "main.cpp")
-                        last_mtime = target.stat().st_mtime if target.exists() else 0
-                        print(f"\nNext: {exercise.slug}")
-                    else:
-                        print("\nTrack complete!")
-                        return 0
-        time.sleep(1)
+def _watch(lang: str, module: str | None, use_mock: bool, *, both_langs: bool) -> int:
+    return run_session(lang, module or "all", use_mock, both_langs=both_langs)
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -98,6 +76,11 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--lang", choices=["python", "cpp"], default="python")
     parser.add_argument("--module", choices=["core", *MODULE_NAMES, "all"], default=None)
     parser.add_argument("--mock", action="store_true", help="Offline mock (CI only)")
+    parser.add_argument(
+        "--both-langs",
+        action="store_true",
+        help="Require both python and cpp before advancing to the next exercise",
+    )
 
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("list", help="List exercises and progress")
@@ -112,7 +95,13 @@ def main(argv: list[str] | None = None) -> None:
     verify_p = sub.add_parser("verify", help="Verify exercises (live Mistral by default)")
     verify_p.add_argument("exercise", nargs="?", help="Slug, id, or 'all'")
 
-    sub.add_parser("watch", help="Verify on save")
+    sub.add_parser("watch", help="Interactive watch session (Rustlings-style)")
+
+    sub.add_parser("menu", help="Interactive start menu (default)")
+
+    session_p = sub.add_parser("session", help="Same as watch — interactive exercise session")
+
+    sub.add_parser("reset", help="Clear local progress (.codam-ai-labs/progress.json)")
 
     review_p = sub.add_parser("review", help="Peer review workflow")
     review_sub = review_p.add_subparsers(dest="review_cmd")
@@ -146,20 +135,34 @@ def main(argv: list[str] | None = None) -> None:
     lang: str = args.lang
     module: str | None = args.module
     use_mock: bool = args.mock
+    prefs = load_preferences()
+    both_langs: bool = args.both_langs or bool(prefs.get("both_langs", False))
 
     if args.command is None:
-        exercise = next_incomplete(lang, module=module or "core")
-        if exercise:
-            print(f"Next: {exercise.slug} — {exercise.title}\n")
-            readme = exercise.path / "README.md"
-            if readme.exists():
-                print(readme.read_text(encoding="utf-8"))
-            print("\nUseful commands:")
-            print(f"  codam-labs --lang {lang} run {exercise.path.name}")
-            print(f"  codam-labs --lang {lang} verify {exercise.path.name}")
-            print(f"  codam-labs review rubric {exercise.path.name}")
-        else:
-            print("Core complete! Try: codam-labs --module rag list")
+        sys.exit(
+            run_menu(
+                lang=lang,
+                module=module or "all",
+                use_mock=use_mock if use_mock else None,
+                both_langs=both_langs if args.both_langs else None,
+            )
+        )
+        return
+
+    if args.command == "menu":
+        sys.exit(
+            run_menu(
+                lang=lang,
+                module=module or "all",
+                use_mock=use_mock if use_mock else None,
+                both_langs=both_langs if args.both_langs else None,
+            )
+        )
+        return
+
+    if args.command == "reset":
+        reset_progress()
+        print("Progress cleared. Run codam-labs to open the menu.")
         return
 
     if args.command == "list":
@@ -171,14 +174,30 @@ def main(argv: list[str] | None = None) -> None:
         if not exercise:
             print("No exercise found.")
             sys.exit(1)
-        sys.exit(run_exercise(exercise, lang, use_mock=use_mock))
+        result = run_exercise(exercise, lang, use_mock=use_mock, capture=True)
+        if not isinstance(result, tuple):
+            sys.exit(1)
+        code, stdout, stderr = result
+        if stdout:
+            print(stdout, end="" if stdout.endswith("\n") else "\n")
+        if stderr:
+            print(stderr, file=sys.stderr, end="" if stderr.endswith("\n") else "\n")
+        for line in format_run_summary(
+            exercise,
+            returncode=code,
+            stdout=stdout,
+            stderr=stderr,
+            use_mock=use_mock,
+        ):
+            print(line)
+        sys.exit(code)
 
     if args.command == "hint":
         exercise = find_exercise(args.exercise, module=module) or next_incomplete(lang, module)
         if not exercise:
             print("No exercise found.")
             sys.exit(1)
-        _show_hint(exercise.path, show_solution=getattr(args, "solution", False))
+        _show_hint(exercise.path, exercise.slug, show_solution=getattr(args, "solution", False))
         return
 
     if args.command == "verify":
@@ -191,7 +210,10 @@ def main(argv: list[str] | None = None) -> None:
         sys.exit(0 if verify_exercise(exercise, lang, use_mock=use_mock) else 1)
 
     if args.command == "watch":
-        sys.exit(_watch(lang, module=module or "core", use_mock=use_mock))
+        sys.exit(_watch(lang, module=module, use_mock=use_mock, both_langs=both_langs))
+
+    if args.command == "session":
+        sys.exit(run_session(lang, module or "all", use_mock=use_mock, both_langs=both_langs))
 
     if args.command == "review":
         if args.review_cmd == "rubric":

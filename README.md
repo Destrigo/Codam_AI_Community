@@ -2,7 +2,8 @@
 
 Interactive [Rustlings](https://github.com/rust-lang/rustlings)-style exercises to learn AI/LLM with **Python** and **C++**.
 
-> New here? Start with the **[Student Onboarding Guide](ONBOARDING.md)**.
+> New here? Start with the **[Student Onboarding Guide](ONBOARDING.md)**.  
+> Quick assignment lookup: **[ASSIGNMENTS.md](ASSIGNMENTS.md)** (all 78 exercises).
 
 ## Structure
 
@@ -47,12 +48,12 @@ pip install -e .
 cp .env.example .env   # add your MISTRAL_API_KEY
 
 # Linux / macOS
-codam-labs list
-codam-labs --mock --lang python verify 01_env_vars
+codam-labs                  # interactive start menu
+codam-labs watch            # skip menu, go straight to watch session
 
 # Windows (if `codam-labs` is not on PATH)
-py -m codam_ai_labs list
-py -m codam_ai_labs --mock --lang python verify 01_env_vars
+py -m codam_ai_labs
+py -m codam_ai_labs watch
 ```
 
 **CLI flag order:** global options (`--mock`, `--lang`, `--module`) go **before** the subcommand:
@@ -66,7 +67,9 @@ codam-labs verify ollama/03_chat --mock        # ❌
 
 | Command | Description |
 |---------|-------------|
-| `codam-labs` | Next incomplete exercise + README |
+| `codam-labs` | Interactive start menu (default) |
+| `codam-labs menu` | Same start menu |
+| `codam-labs watch` / `session` | Watch session (skip menu) |
 | `codam-labs list` | List exercises and status |
 | `codam-labs --module <name> list` | List one module |
 | `codam-labs --lang python run <slug>` | Run an exercise (live Mistral by default) |
