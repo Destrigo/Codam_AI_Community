@@ -16,6 +16,8 @@ jobs:
           python-version: "3.12"
       - name: Install codam-labs
         run: pip install -e .
+      - name: Student stubs are not solutions
+        run: python scripts/reset_student_stubs.py check
       - name: Verify all exercises (mock — no API key)
         run: python scripts/check_solutions.py --lang python --mock
       - name: Verify all exercises C++ (mock)
