@@ -82,7 +82,7 @@ MISTRAL_MODEL=mistral-small-latest
 APP_NAME=codam-ai-labs
 
 # Only needed for the ollama module (local, no cloud key):
-OLLAMA_BASE=http://localhost:11434
+# CODAM_LABS_OLLAMA_BASE=http://localhost:11434
 OLLAMA_MODEL=llama3.2
 ```
 
@@ -90,6 +90,7 @@ OLLAMA_MODEL=llama3.2
 - There is **one `.env`** at the repo root — it powers every exercise.
 - **Each student uses their own key.** Never share keys, never commit `.env` (it's git-ignored).
 - If you don't have a key yet, you can still do most of the course with `--mock`.
+- Prefer **`--mock`** for HTTP echo/todo, MCP, Ollama, and `/fail_twice` exercises — public services flake; mock ports are dynamic (use the `CODAM_LABS_*` env vars).
 
 ### 2.3 Smoke test
 
@@ -345,6 +346,9 @@ data-ingestion scenarios). Reference solutions are provided in Python.
 | `codam-labs: command not found` | Use `py -m codam_ai_labs ...` (Windows) or `python -m codam_ai_labs ...`, or add Scripts to PATH |
 | `MISTRAL_API_KEY is required` | Set your key in `.env`, or put `--mock` before the subcommand |
 | Live verify fails but `--mock` passes | Network/firewall/proxy issue, or invalid key — check connectivity first |
+| `03_http_post` → 503 / HTML from httpbin | Public httpbin is flaky. Use `CODAM_LABS_ECHO_URL` and `codam-labs --mock verify 03_http_post` |
+| MCP / Ollama exercises fail with connection errors | Use `CODAM_LABS_MCP_BASE` / `CODAM_LABS_OLLAMA_BASE` and `--mock` (do not hardcode ports) |
+| `09_timeout_retry` / `production/01_rate_limit` 404 | `/fail_twice` is mock-only — run with `--mock` |
 | C++ build fails: `cmake not found` | Install CMake 3.16+ and a C++17 compiler |
 | First C++ build is slow | It's downloading header-only deps once; later builds are fast |
 | Ollama exercise fails (live) | Make sure `ollama serve` is running and the model is pulled, or use `--mock` |

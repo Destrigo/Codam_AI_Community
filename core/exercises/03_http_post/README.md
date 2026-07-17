@@ -16,11 +16,30 @@
 
 When you send JSON, the `Content-Type: application/json` header tells the server how to interpret the body.
 
-### httpbin.org/post
+### Echo endpoint
 
-A test service that **echoes** the request it receives. Useful for verifying your POST is correct without authentication.
+You POST JSON to an **echo** service that returns your body back. Useful for verifying the POST without authentication.
 
-The response contains a `json` field with the body you sent.
+**URL (important):**
+
+```text
+os.environ["CODAM_LABS_ECHO_URL"]   # set automatically when you use --mock
+# fallback if unset: https://httpbin.org/post
+```
+
+Prefer **`--mock`** for this exercise. Public `httpbin.org` is often rate-limited or returns **503**; that is an infrastructure issue, not your code.
+
+The response contains a `json` field with the body you sent (not the string field `data`):
+
+```json
+{
+  "json": {"name": "codam"},
+  "data": "{\"name\": \"codam\"}"
+}
+```
+
+Use `response["json"]["name"]` → print `ECHO_OK:codam`.  
+Do **not** parse `data` (that is a raw string and leads to awkward double-`json.loads`).
 
 ### Connection to AI
 
@@ -37,7 +56,7 @@ Every call to `/v1/chat/completions` is a POST with a JSON body:
 
 ## Assignment
 
-Send a POST request to `https://httpbin.org/post` with JSON body:
+Send a POST request to the echo URL above with JSON body:
 
 ```json
 {"name": "codam"}
@@ -50,5 +69,7 @@ Print: `ECHO_OK:codam` (extract `json.name` from the response).
 ## Verify
 
 ```bash
-codam-labs verify 03_http_post
+codam-labs --mock verify 03_http_post
 ```
+
+If you insist on live `httpbin.org` and get `503` / HTML errors, switch back to `--mock`.

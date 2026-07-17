@@ -1,7 +1,12 @@
-# Ollama Model from Environment
+# Ollama Model Env
 
 ## Theory
-Point exercises at different local models via `.env` (`OLLAMA_MODEL`) without code changes.
+Pick the model from env OLLAMA_MODEL (default llama3.2).
 
 ## Assignment
-Read `OLLAMA_MODEL` (default `llama3.2`). Print `MODEL_OK:` + model name.
+Read OLLAMA_MODEL (default llama3.2). Print MODEL_OK: + model name.
+
+## Verify
+`ash
+codam-labs --mock verify ollama/04_model_env
+`

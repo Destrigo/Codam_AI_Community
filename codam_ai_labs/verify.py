@@ -71,12 +71,17 @@ def exercise_env(use_mock: bool, mock_base: str | None = None) -> dict[str, str]
         apply_mistral_env(env, mock_base=mock_base)
         echo_root = mock_base.rsplit("/v1", 1)[0]
         env["CODAM_LABS_ECHO_URL"] = f"{echo_root}/echo"
+        env["CODAM_LABS_TODO_URL"] = f"{echo_root}/todos/1"
         env["CODAM_LABS_MCP_BASE"] = f"{echo_root}/mcp"
         env["CODAM_LABS_OLLAMA_BASE"] = echo_root
         env.setdefault("OLLAMA_MODEL", "llama3.2")
     else:
         apply_mistral_env(env, mock_base=None)
         env.setdefault("CODAM_LABS_ECHO_URL", "https://httpbin.org/post")
+        env.setdefault(
+            "CODAM_LABS_TODO_URL",
+            "https://jsonplaceholder.typicode.com/todos/1",
+        )
         env.setdefault("CODAM_LABS_OLLAMA_BASE", "http://localhost:11434")
         env.setdefault("OLLAMA_MODEL", "llama3.2")
     return env
@@ -204,6 +209,13 @@ def verify_exercise(
             print(f"FAIL {exercise.slug} [{lang}] exit code {proc.returncode}")
             print(proc.stdout)
             print(proc.stderr)
+            if exercise.slug == "03_http_post" and (
+                "503" in (proc.stderr or "") or "503" in (proc.stdout or "")
+            ):
+                print(
+                    "hint: httpbin.org often returns 503. "
+                    "Use `codam-labs --mock verify 03_http_post` and read CODAM_LABS_ECHO_URL."
+                )
             return False
 
         ok, msg = check_output(exercise.slug, proc.stdout, proc.stderr, use_mock=use_mock)
@@ -214,6 +226,11 @@ def verify_exercise(
             print(f"PASS {exercise.slug} [{lang}] ({mode})")
             return True
         print(f"FAIL {exercise.slug} [{lang}] — {msg}")
+        if exercise.slug == "03_http_post" and not use_mock:
+            print(
+                "hint: prefer `codam-labs --mock verify 03_http_post` "
+                "(local echo). Use response['json']['name'], not ['data']."
+            )
         return False
     finally:
         if server:

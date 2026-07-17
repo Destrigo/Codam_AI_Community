@@ -9,8 +9,8 @@ Verify with: `codam-labs --mock verify <slug>`
 | Slug | Assignment | Verify expects |
 |------|------------|----------------|
 | `01_env_vars` | Read the environment variable `APP_NAME`. - If it is set, print: `APP_NAME=<value>` - If it is missing, print: `APP_NAME=MISSING` The ver... | `APP_NAME=codam-ai-labs` |
-| `02_http_get` | Send a GET request to `https://jsonplaceholder.typicode.com/todos/1`. Print the todo's `title` field (one line, title text only). Expecte... | `delectus aut autem` |
-| `03_http_post` | Send a POST request to `https://httpbin.org/post` with JSON body: Header: `Content-Type: application/json` Print: `ECHO_OK:codam` (extrac... | `ECHO_OK:codam` |
+| `02_http_get` | GET `CODAM_LABS_TODO_URL` (mock) / jsonplaceholder fallback. Print the todo `title`. Prefer `--mock`. | `delectus aut autem` |
+| `03_http_post` | POST JSON `{"name":"codam"}` to `CODAM_LABS_ECHO_URL` (mock) / httpbin fallback. Print `ECHO_OK:codam` from `json.name`. Prefer `--mock`. | `ECHO_OK:codam` |
 | `04_llm_first_call` | Call the chat completions API with: - `model`: `"mistral-small-latest"` (or any string with the mock) - `messages`: a single user message... | `MOCK_RESPONSE` |
 | `05_system_user_prompts` | Send a chat with: - **system**: `"Always respond in UPPERCASE"` - **user**: `"hello"` Print only the assistant response. Expected output ... | `HELLO` |
 | `06_conversation_history` | Send **4 messages** in a single call: 1. `user`: `"First"` 2. `assistant`: `"Received first"` 3. `user`: `"Second"` 4. `user`: `"How many... | `HISTORY_OK:4` |

@@ -11,4 +11,12 @@ Expose and consume tools/resources via MCP-style HTTP (mock server in verify).
 | 05 | client_session | Initialize session |
 | 06 | bridge_llm | LLM + MCP bridge |
 
+## Important
+
+Exercises 02–05 talk to **`CODAM_LABS_MCP_BASE`** (set by `--mock`). Do not hardcode `127.0.0.1:8765` — the mock port is dynamic.
+
+```bash
+codam-labs --mock --module mcp verify all
+```
+
 Prerequisites: `core/`, `modules/tools`

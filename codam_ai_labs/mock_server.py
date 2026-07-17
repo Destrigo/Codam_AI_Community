@@ -107,6 +107,15 @@ class _MockHandler(BaseHTTPRequestHandler):
                 ],
             })
             return
+        # jsonplaceholder-compatible todo (02_http_get, tools/05_fetch_url)
+        if self.path.rstrip("/").endswith("/todos/1") or self.path.endswith("/todo"):
+            self._send_json({
+                "userId": 1,
+                "id": 1,
+                "title": "delectus aut autem",
+                "completed": False,
+            })
+            return
         self._send_json({"error": "not found"}, status=404)
 
     def do_POST(self) -> None:

@@ -1,8 +1,16 @@
 """Exercise stub."""
 
+import json
+import os
+import urllib.request
+
 
 def main() -> None:
-    # TODO: implement
+    url = os.environ.get(
+        "CODAM_LABS_TODO_URL",
+        "https://jsonplaceholder.typicode.com/todos/1",
+    )
+    # TODO: GET title, print FETCH_OK:<title>
     pass
 
 

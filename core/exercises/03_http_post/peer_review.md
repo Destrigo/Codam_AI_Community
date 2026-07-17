@@ -3,9 +3,10 @@
 Use this checklist **instead of reading `solution/`**. Pair with a classmate.
 
 ## Before review
-- [ ] Your code runs: `codam-labs run 03_http_post --lang python`
+- [ ] Your code runs: `codam-labs --mock run 03_http_post --lang python`
 - [ ] You tried `codam-labs hint` (not `--solution`)
 - [ ] Submit: `codam-labs review submit 03_http_post --lang python`
+- [ ] You use `CODAM_LABS_ECHO_URL` (not a hardcoded-only httpbin URL) so `--mock` works
 
 ## Reviewer checklist
 - [ ] Code runs without errors on reviewer's machine

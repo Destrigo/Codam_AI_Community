@@ -20,21 +20,32 @@ JavaScript Object Notation — a text-based key-value format:
 
 ### Typical flow
 
-1. Build the URL (`https://jsonplaceholder.typicode.com/todos/1`)
+1. Build the URL (from env, see below)
 2. Send a GET request
 3. Check the status code
 4. Parse the JSON
 5. Extract the field you need
 
+### URL (important)
+
+```python
+url = os.environ.get(
+    "CODAM_LABS_TODO_URL",
+    "https://jsonplaceholder.typicode.com/todos/1",
+)
+```
+
+`--mock` sets `CODAM_LABS_TODO_URL` to a local fake todo (no internet). Prefer mock if typicode is slow or blocked.
+
 ### Why before the LLM
 
-Before calling OpenAI you learn the same pattern: HTTP request → JSON response → extract field. LLM APIs use POST, but parsing the response is identical.
+Before calling an LLM you learn the same pattern: HTTP request → JSON response → extract field. LLM APIs use POST, but parsing the response is identical.
 
 ---
 
 ## Assignment
 
-Send a GET request to `https://jsonplaceholder.typicode.com/todos/1`.
+Send a GET request to the todo URL above.
 
 Print the todo's `title` field (one line, title text only).
 
@@ -48,5 +59,5 @@ Expected output: `delectus aut autem`
 ## Verify
 
 ```bash
-codam-labs verify 02_http_get
+codam-labs --mock verify 02_http_get
 ```

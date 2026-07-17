@@ -5,6 +5,9 @@
 #include <string>
 
 int main() {
-    // TODO: POST JSON to httpbin, print ECHO_OK:codam
+    const char* env = std::getenv("CODAM_LABS_ECHO_URL");
+    // Prefer env (set with --mock). Fallback: https://httpbin.org/post
+    (void)env;
+    // TODO: POST JSON {"name":"codam"}, print ECHO_OK:codam from response["json"]["name"]
     return 0;
 }

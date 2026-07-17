@@ -33,9 +33,11 @@ Codam AI Labs runs on **Windows, macOS, and Linux**. No administrator privileges
 |---------|----------|-------|
 | [Mistral API](https://console.mistral.ai) | Most exercises | Personal `MISTRAL_API_KEY` in repo-root `.env` |
 | [Ollama](https://ollama.com/download) | `modules/ollama` | `ollama serve` + `ollama pull llama3.2` (and `nomic-embed-text` for embeddings) |
-| Internet | Live HTTP / API calls | `jsonplaceholder.typicode.com`, `httpbin.org`, cloud APIs |
+| Internet | Live HTTP / API calls | Prefer `--mock` for class; live may hit typicode / httpbin / cloud APIs |
 
-**Offline / CI:** `codam-labs --mock verify` starts a local mock server on `127.0.0.1` — no API keys, no Ollama install, no internet (after the first C++ build, which may download header-only deps via CMake).
+**Offline / CI:** `codam-labs --mock verify` starts a local mock on `127.0.0.1` covering Mistral-compatible APIs, echo POST, todo GET, MCP, Ollama, and `/fail_twice` — no API keys, no Ollama install, no internet for those paths (first C++ build may still download header-only deps via CMake).
+
+Use env vars set by mock (`CODAM_LABS_ECHO_URL`, `CODAM_LABS_TODO_URL`, `CODAM_LABS_MCP_BASE`, `CODAM_LABS_OLLAMA_BASE`, `MISTRAL_API_BASE`) — do not hardcode mock ports.
 
 **Environment constraints:** corporate firewalls or proxies may block cloud APIs or GitHub downloads. If live verify fails but `--mock` passes, check network access first.
 

@@ -24,7 +24,10 @@ NO_MISTRAL_SLUGS = {
     "mcp/05_client_session",
     "security/01_detect_injection", "security/02_sanitize_input", "security/03_secret_scan",
     "security/04_prompt_boundary", "security/05_pii_redact", "security/06_red_team",
-    "ollama/01_check_version", "ollama/02_list_models", "ollama/04_model_env",
+    "ollama/01_check_version", "ollama/02_list_models", "ollama/03_chat",
+    "ollama/04_model_env", "ollama/05_stream_chat", "ollama/06_embeddings",
+    # mock-only endpoint /fail_twice — still list here so live does not demand a Mistral key
+    "09_timeout_retry", "production/01_rate_limit",
 }
 
 # slug -> substrings required in stdout (mock mode)
@@ -168,6 +171,8 @@ LIVE_VALIDATORS: dict[str, Callable[[str], bool]] = {
     "production/01_rate_limit": lambda o: "RETRY_OK" in o or "RATE_OK" in o,
     "advanced_patterns/04_critique_revise": _non_empty,
     "mcp/06_bridge_llm": _non_empty,
+    "ollama/01_check_version": lambda o: o.strip().startswith("OLLAMA_OK:"),
+    "ollama/02_list_models": lambda o: bool(re.search(r"MODELS_OK:\d+", o)),
     "ollama/03_chat": _non_empty,
     "ollama/05_stream_chat": _non_empty,
     "ollama/06_embeddings": _embed_dim_ok,
@@ -189,7 +194,14 @@ def check_output(slug: str, stdout: str, stderr: str, *, use_mock: bool) -> tupl
             return False, f"Expected HELLO, got {out!r}"
         return True, "OK"
 
-    # Live: exact checks for local exercises
+    # Live: prefer semantic validators when present (e.g. real Ollama version string)
+    if slug in LIVE_VALIDATORS:
+        validator = LIVE_VALIDATORS[slug]
+        if validator(out):
+            return True, "OK"
+        return False, f"Live validation failed.\n--- stdout ---\n{out}\n--- stderr ---\n{stderr.strip()}"
+
+    # Live local exercises without a dedicated live validator: same exact checks as mock
     if slug in NO_MISTRAL_SLUGS:
         expected = MOCK_CHECKS.get(slug, [])
         missing = [item for item in expected if item not in out]
@@ -197,7 +209,6 @@ def check_output(slug: str, stdout: str, stderr: str, *, use_mock: bool) -> tupl
             return False, f"Missing expected output: {missing}\n--- stdout ---\n{out}"
         return True, "OK"
 
-    validator = LIVE_VALIDATORS.get(slug, _non_empty)
-    if validator(out):
+    if _non_empty(out):
         return True, "OK"
     return False, f"Live validation failed.\n--- stdout ---\n{out}\n--- stderr ---\n{stderr.strip()}"

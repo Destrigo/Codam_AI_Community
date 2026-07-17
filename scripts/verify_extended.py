@@ -23,6 +23,9 @@ def _env(mock_base: str | None) -> dict[str, str]:
         apply_mistral_env(env, mock_base=mock_base)
         echo_root = mock_base.rsplit("/v1", 1)[0]
         env["CODAM_LABS_ECHO_URL"] = f"{echo_root}/echo"
+        env["CODAM_LABS_TODO_URL"] = f"{echo_root}/todos/1"
+        env["CODAM_LABS_MCP_BASE"] = f"{echo_root}/mcp"
+        env["CODAM_LABS_OLLAMA_BASE"] = echo_root
     else:
         apply_mistral_env(env, mock_base=None)
     env["CODAM_LABS_AUTO_CONFIRM"] = "1"

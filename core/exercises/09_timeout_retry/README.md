@@ -46,8 +46,10 @@ Implement a function that calls `GET {MISTRAL_API_BASE}/fail_twice` (mock endpoi
 
 The mock fails 2 times then responds with 200.
 
+**This endpoint exists only on the labs mock.** Live Mistral has no `/fail_twice`.
+
 ## Verify
 
 ```bash
-codam-labs verify 09_timeout_retry
+codam-labs --mock verify 09_timeout_retry
 ```

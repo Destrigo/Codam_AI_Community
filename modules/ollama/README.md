@@ -20,13 +20,25 @@ ollama pull llama3.2
 ollama pull nomic-embed-text   # optional, for exercise 06
 ```
 
-Add to repo root `.env`:
+In code, use **`CODAM_LABS_OLLAMA_BASE`** (not `OLLAMA_BASE`):
+
+```python
+base = os.environ.get("CODAM_LABS_OLLAMA_BASE", "http://localhost:11434").rstrip("/")
+```
+
+Optional in repo root `.env` for live Ollama:
 
 ```bash
-OLLAMA_BASE=http://localhost:11434
+# CODAM_LABS_OLLAMA_BASE=http://localhost:11434   # optional; this is the default
 OLLAMA_MODEL=llama3.2
 ```
 
-`codam-labs verify --mock` uses a built-in mock — no Ollama install required for CI.
+**Verify offline (recommended for class / CI):**
+
+```bash
+codam-labs --mock --module ollama verify all
+```
+
+No Ollama install required with `--mock`.
 
 Prerequisites: `core/`, `modules/local_llm`
